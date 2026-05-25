@@ -1,0 +1,10 @@
+.git
+.gitignore
+.husky
+.eslint*
+.prettier*
+jest.config.ts
+jest.setup.ts
+tsconfig.json
+next.config.ts
+src/__tests__
