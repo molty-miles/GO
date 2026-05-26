@@ -32,6 +32,7 @@ function volumeBar(v: number, max: number): string {
 export function MarketCard({ market, onAddLeg, isBestOdds }: MarketCardProps) {
   const multiplier = market.c_yes > 0 ? (1 / market.c_yes).toFixed(2) : "—";
   const [livePrice, setLivePrice] = useState<number>(market.c_yes);
+  const [addedFeedback, setAddedFeedback] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -55,10 +56,16 @@ export function MarketCard({ market, onAddLeg, isBestOdds }: MarketCardProps) {
 
   const priceChanged = livePrice !== market.c_yes;
 
+  const handleAddLeg = () => {
+    onAddLeg?.(market);
+    setAddedFeedback(true);
+    setTimeout(() => setAddedFeedback(false), 2000);
+  };
+
   return (
     <div
       className={cn(
-        "group relative rounded-xl border bg-card p-4 transition-colors hover:border-zinc-700",
+        "group relative flex flex-col rounded-xl border bg-card p-3 sm:p-4 transition-colors hover:border-zinc-700",
         isBestOdds ? "border-emerald-500/40" : "border-border",
       )}
     >
@@ -68,7 +75,7 @@ export function MarketCard({ market, onAddLeg, isBestOdds }: MarketCardProps) {
         </span>
       )}
 
-      <div className="mb-1 flex items-center gap-2">
+      <div className="mb-2 flex flex-wrap items-center gap-1 sm:gap-2">
         <span
           className={cn("rounded-md px-2 py-0.5 text-xs font-medium", venueColor(market.venue))}
         >
@@ -84,43 +91,59 @@ export function MarketCard({ market, onAddLeg, isBestOdds }: MarketCardProps) {
         ))}
       </div>
 
-      <Link href={`/markets/${market.id}`} className="block">
-        <h3 className="mb-3 text-sm font-medium leading-snug text-foreground hover:text-primary">
+      <Link href={`/markets/${market.id}`} className="block flex-1">
+        <h3 className="mb-2 sm:mb-3 text-sm font-medium leading-snug text-foreground hover:text-primary line-clamp-2 sm:line-clamp-3">
           {market.question}
         </h3>
       </Link>
 
       <div
-        className="mb-3 h-1 rounded-full"
+        className="mb-2 sm:mb-3 h-1 rounded-full"
         style={{ background: volumeBar(market.volume, 100000) }}
       />
 
-      <div className="flex items-center justify-between">
-        <div>
-          <div className="flex items-center gap-2">
-            <span
-              className={cn(
-                "text-lg font-bold text-foreground transition-colors",
-                priceChanged && "text-green-400",
-              )}
-            >
-              {(livePrice * 100).toFixed(1)}%
-            </span>
-            {priceChanged && <span className="h-2 w-2 animate-pulse rounded-full bg-green-500" />}
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between gap-2">
+          <div>
+            <div className="flex items-center gap-2">
+              <span
+                className={cn(
+                  "text-lg font-bold text-foreground transition-colors",
+                  priceChanged && "text-green-400",
+                )}
+              >
+                {(livePrice * 100).toFixed(1)}%
+              </span>
+              {priceChanged && <span className="h-2 w-2 animate-pulse rounded-full bg-green-500" />}
+            </div>
+            <div className="text-xs text-muted-foreground">{multiplier}x</div>
           </div>
-          <div className="text-xs text-muted-foreground">{multiplier}x</div>
-        </div>
 
-        <div className="text-right text-xs text-muted-foreground">
-          <div>Vol: {market.volume.toLocaleString()}</div>
+          <div className="text-right text-xs text-muted-foreground">
+            <div>Vol: {market.volume.toLocaleString()}</div>
+          </div>
         </div>
 
         {onAddLeg && (
           <button
-            onClick={() => onAddLeg(market)}
-            className="rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-all hover:bg-primary/90 md:opacity-0 md:group-hover:opacity-100"
+            onClick={handleAddLeg}
+            className={cn(
+              "w-full rounded-lg px-3 py-2 text-xs font-medium transition-all active:scale-95 flex items-center justify-center gap-2",
+              addedFeedback
+                ? "bg-green-600 text-white"
+                : "bg-primary text-primary-foreground hover:bg-primary/90",
+            )}
           >
-            + Add
+            {addedFeedback ? (
+              <>
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                Added!
+              </>
+            ) : (
+              "+ Add to Parlay"
+            )}
           </button>
         )}
       </div>
