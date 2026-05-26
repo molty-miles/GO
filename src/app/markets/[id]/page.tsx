@@ -66,7 +66,7 @@ export default function MarketDetailPage({ params }: { params: Promise<{ id: str
 
   if (loading) {
     return (
-      <div className="p-4 pb-24 md:pb-4">
+      <div className="p-4 pb-24 pt-14 md:p-6 md:pb-4 md:pt-0">
         <MarketGridSkeleton count={1} />
       </div>
     );
@@ -95,7 +95,7 @@ export default function MarketDetailPage({ params }: { params: Promise<{ id: str
   };
 
   return (
-    <div className="p-4 pb-24 md:pb-4">
+    <div className="p-4 pb-24 pt-14 md:p-6 md:pb-4 md:pt-0">
       <button
         onClick={() => router.back()}
         className="mb-4 flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"

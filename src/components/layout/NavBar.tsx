@@ -93,6 +93,12 @@ export function NavBar() {
         ))}
       </nav>
 
+      {/* Mobile top bar */}
+      <div className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur md:hidden">
+        <div className="text-base font-semibold tracking-tight">GO Market</div>
+        <ThemeToggle />
+      </div>
+
       {/* Mobile floating bottom nav */}
       <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 backdrop-blur md:hidden">
         <div className="flex items-center justify-around py-2">

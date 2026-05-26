@@ -118,7 +118,7 @@ export function MarketCard({ market, onAddLeg, isBestOdds }: MarketCardProps) {
         {onAddLeg && (
           <button
             onClick={() => onAddLeg(market)}
-            className="rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground opacity-0 transition-all hover:bg-primary/90 group-hover:opacity-100"
+            className="rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-all hover:bg-primary/90 md:opacity-0 md:group-hover:opacity-100"
           >
             + Add
           </button>

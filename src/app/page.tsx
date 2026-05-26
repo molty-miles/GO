@@ -2,9 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { MarketGrid } from "@/components/markets/MarketGrid";
-import { TrendingSection } from "@/components/social/TrendingSection";
-import { PopularCombos } from "@/components/social/PopularCombos";
-import { EditorialPicks } from "@/components/social/EditorialPicks";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import type { UnifiedMarket } from "@/types/market";
 
@@ -39,29 +36,16 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="space-y-8 p-4 pb-24 md:pb-4">
-      <div>
-        <h1 className="text-xl font-bold">GO Market</h1>
+    <div className="p-4 pb-24 pt-14 md:p-6 md:pb-4 md:pt-0">
+      <div className="mb-6">
+        <h1 className="text-xl font-bold">Markets</h1>
         <p className="text-sm text-muted-foreground">
-          Cross-platform prediction market accumulator
+          Browse and combine prediction markets into accumulator tickets
         </p>
       </div>
 
       <ErrorBoundary>
-        <TrendingSection markets={markets} isLoading={isLoading} />
-      </ErrorBoundary>
-
-      <ErrorBoundary>
-        <PopularCombos />
-      </ErrorBoundary>
-
-      <ErrorBoundary>
-        <EditorialPicks />
-      </ErrorBoundary>
-
-      <ErrorBoundary>
         <section>
-          <h2 className="mb-3 text-lg font-bold">All Markets</h2>
           {error ? (
             <div className="rounded-xl bg-destructive/10 p-4 text-sm text-destructive">{error}</div>
           ) : (
