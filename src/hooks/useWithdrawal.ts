@@ -1,36 +1,40 @@
 import { useState, useCallback } from "react";
+import { useWallets } from "@privy-io/react-auth";
+import { withdrawUSDC } from "@/lib/contract";
 
 export type WithdrawalState = "idle" | "pending" | "confirming" | "confirmed" | "failed";
 
 export function useWithdrawal() {
+  const { wallets } = useWallets();
   const [state, setState] = useState<WithdrawalState>("idle");
-  const [txHash, setTxHash] = useState<string | null>(null);
+  const [txHash, setTxHash] = useState<`0x${string}` | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const withdraw = useCallback(async (amountUsdc: number) => {
-    setState("pending");
-    setError(null);
+  const withdraw = useCallback(
+    async (amountUsdc: number) => {
+      setState("pending");
+      setError(null);
+      setTxHash(null);
 
-    try {
-      const response = await fetch("/api/withdraw", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: amountUsdc }),
-      });
+      try {
+        const activeWallet = wallets[0];
+        if (!activeWallet) {
+          throw new Error("No wallet connected. Please log in.");
+        }
 
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error ?? "Withdrawal failed");
+        const provider = await activeWallet.getEthereumProvider();
+
+        const hash = await withdrawUSDC(amountUsdc, provider);
+        setTxHash(hash);
+        setState("confirmed");
+      } catch (err) {
+        console.error("Withdrawal failed:", err);
+        setError(err instanceof Error ? err.message : "Withdrawal failed");
+        setState("failed");
       }
-
-      const data = await response.json();
-      setTxHash(data.txHash);
-      setState("confirmed");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Withdrawal failed");
-      setState("failed");
-    }
-  }, []);
+    },
+    [wallets],
+  );
 
   const reset = useCallback(() => {
     setState("idle");

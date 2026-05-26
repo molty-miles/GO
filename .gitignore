@@ -42,6 +42,8 @@ next-env.d.ts
 
 # Foundry / Smart Contracts
 contracts/node_modules/
+contracts/lib/
+contracts/foundry_bin/
 contracts/out/
 contracts/cache/
 contracts/broadcast/

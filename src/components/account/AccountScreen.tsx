@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useUser } from "@/hooks/useUser";
 import { useBalance } from "@/hooks/useBalance";
+import { useDeposit } from "@/hooks/useDeposit";
+import { useWithdrawal } from "@/hooks/useWithdrawal";
 import { formatUsdc } from "@/utils/format";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { cn } from "@/lib/utils";
@@ -15,7 +17,9 @@ const historyMock = [
 
 export function AccountScreen() {
   const { authenticated, address, login, exportWallet } = useUser();
-  const { available, deployedCapital, pendingWinnings } = useBalance();
+  const { available, deployedCapital, pendingWinnings, refetch: refetchBalance } = useBalance();
+  const { state: depositState, error: depositError, deposit } = useDeposit();
+  const { state: withdrawState, error: withdrawError, withdraw } = useWithdrawal();
   const [tab, setTab] = useState<"history" | "deposit" | "withdraw">("history");
   const [amount, setAmount] = useState("");
 
@@ -103,11 +107,30 @@ export function AccountScreen() {
             placeholder="0.00"
             className="mb-3 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-lg text-white outline-none placeholder-zinc-600 focus:border-indigo-500"
           />
+          {depositError && <p className="mb-2 text-sm text-red-400">{depositError}</p>}
           <button
-            disabled={!amount || Number(amount) <= 0}
+            onClick={async () => {
+              await deposit(Number(amount));
+              setAmount("");
+              refetchBalance();
+            }}
+            disabled={
+              !amount ||
+              Number(amount) <= 0 ||
+              depositState === "pending" ||
+              depositState === "confirming"
+            }
             className="w-full rounded-xl bg-indigo-600 py-3 font-medium text-white transition-colors hover:bg-indigo-500 disabled:opacity-50"
           >
-            Deposit
+            {depositState === "pending"
+              ? "Approving..."
+              : depositState === "confirming"
+                ? "Depositing..."
+                : depositState === "confirmed"
+                  ? "Done ✓"
+                  : depositState === "failed"
+                    ? "Retry"
+                    : "Deposit"}
           </button>
         </div>
       )}
@@ -122,8 +145,28 @@ export function AccountScreen() {
             placeholder="0.00"
             className="mb-3 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-lg text-white outline-none placeholder-zinc-600 focus:border-indigo-500"
           />
-          <button className="w-full rounded-xl bg-red-600 py-3 font-medium text-white transition-colors hover:bg-red-500 disabled:opacity-50">
-            Withdraw
+          {withdrawError && <p className="mb-2 text-sm text-red-400">{withdrawError}</p>}
+          <button
+            onClick={async () => {
+              await withdraw(Number(amount));
+              setAmount("");
+              refetchBalance();
+            }}
+            disabled={
+              !amount ||
+              Number(amount) <= 0 ||
+              withdrawState === "pending" ||
+              withdrawState === "confirming"
+            }
+            className="w-full rounded-xl bg-red-600 py-3 font-medium text-white transition-colors hover:bg-red-500 disabled:opacity-50"
+          >
+            {withdrawState === "pending"
+              ? "Processing..."
+              : withdrawState === "confirmed"
+                ? "Done ✓"
+                : withdrawState === "failed"
+                  ? "Retry"
+                  : "Withdraw"}
           </button>
         </div>
       )}

@@ -8,7 +8,7 @@ import { GoVault } from "../src/GoVault.sol";
 import { GoManager } from "../src/GoManager.sol";
 import { GoAdaptorRegistry } from "../src/GoAdaptorRegistry.sol";
 import { IVenueAdaptor } from "../src/adaptors/IVenueAdaptor.sol";
-import { GoErrors, GoConstants, LegStatus, AccaStatus, LegRequest } from "../src/shared/GoTypes.sol";
+import { GoErrors, GoConstants, LegStatus, AccaStatus, Acca, LegRequest } from "../src/shared/GoTypes.sol";
 
 contract MockAdaptor is IVenueAdaptor {
     string public _venueId;
