@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useUser } from "@/hooks/useUser";
 import { useBalance } from "@/hooks/useBalance";
 import { useDeposit } from "@/hooks/useDeposit";
@@ -8,12 +8,7 @@ import { useWithdrawal } from "@/hooks/useWithdrawal";
 import { formatUsdc } from "@/utils/format";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { cn } from "@/lib/utils";
-
-const historyMock = [
-  { type: "deposit", amount: 500, date: "2026-05-10", txHash: "0xabcd" },
-  { type: "deposit", amount: 200, date: "2026-05-08", txHash: "0xef01" },
-  { type: "withdrawal", amount: 50, date: "2026-05-05", txHash: "0x2345" },
-];
+import { fetchUserHistory, type HistoryItem } from "@/lib/contract/history";
 
 export function AccountScreen() {
   const { authenticated, address, login, exportWallet } = useUser();
@@ -22,6 +17,28 @@ export function AccountScreen() {
   const { state: withdrawState, error: withdrawError, withdraw } = useWithdrawal();
   const [tab, setTab] = useState<"history" | "deposit" | "withdraw">("history");
   const [amount, setAmount] = useState("");
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
+
+  useEffect(() => {
+    if (!address || tab !== "history") return;
+    let cancelled = false;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setHistoryLoading(true);
+    fetchUserHistory(address as `0x${string}`)
+      .then((data) => {
+        if (!cancelled) {
+          setHistory(data);
+          setHistoryLoading(false);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setHistoryLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [address, tab]);
 
   if (!authenticated) {
     return (
@@ -54,7 +71,7 @@ export function AccountScreen() {
         </div>
       </div>
 
-      {/* Tabs - shadcn style */}
+      {/* Tabs */}
       <div className="flex gap-2">
         {(["history", "deposit", "withdraw"] as const).map((t) => (
           <button
@@ -75,24 +92,59 @@ export function AccountScreen() {
       {/* Tab content */}
       {tab === "history" && (
         <div className="space-y-2">
-          {historyMock.map((h, i) => (
-            <div key={i} className="flex items-center justify-between rounded-xl bg-card px-4 py-3">
-              <div className="flex items-center gap-3">
-                <span
-                  className={cn(
-                    "text-sm font-medium",
-                    h.type === "deposit" ? "text-emerald-500" : "text-red-500",
-                  )}
-                >
-                  {h.type === "deposit" ? "+" : "-"}${h.amount}
-                </span>
-                <span className="text-xs text-muted-foreground">{h.date}</span>
-              </div>
-              <span className="font-mono text-xs text-muted-foreground">
-                {h.txHash.slice(0, 10)}...
-              </span>
+          {historyLoading ? (
+            <div className="space-y-2">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="h-14 animate-pulse rounded-xl bg-secondary" />
+              ))}
             </div>
-          ))}
+          ) : history.length === 0 ? (
+            <div className="rounded-xl border bg-card p-6 text-center text-sm text-muted-foreground">
+              No activity yet
+            </div>
+          ) : (
+            history.map((item, i) => (
+              <div
+                key={i}
+                className="flex items-center justify-between rounded-xl bg-card px-4 py-3"
+              >
+                <div className="flex items-center gap-3">
+                  <span
+                    className={cn(
+                      "text-sm font-medium",
+                      item.type === "deposit" || item.type === "acca_settled"
+                        ? "text-emerald-500"
+                        : "text-red-500",
+                    )}
+                  >
+                    {item.type === "deposit"
+                      ? `+${item.amount.toFixed(2)}`
+                      : item.type === "withdraw"
+                        ? `-${item.amount.toFixed(2)}`
+                        : item.type === "acca_created"
+                          ? `${item.amount.toFixed(2)} stake`
+                          : `+${item.amount.toFixed(2)} payout`}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {item.type === "deposit"
+                      ? "Deposit"
+                      : item.type === "withdraw"
+                        ? "Withdraw"
+                        : item.type === "acca_created"
+                          ? "Parlay"
+                          : item.status === "WON"
+                            ? "Won"
+                            : item.status === "LOST"
+                              ? "Lost"
+                              : "Cancelled"}
+                  </span>
+                </div>
+                <span className="text-xs text-muted-foreground">
+                  {new Date(item.timestamp).toLocaleDateString()}
+                </span>
+              </div>
+            ))
+          )}
         </div>
       )}
 

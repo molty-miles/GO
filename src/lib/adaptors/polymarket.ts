@@ -55,7 +55,9 @@ export class PolymarketAdapter implements VenueDataAdapter {
   requiresRelayer = true;
 
   async listMarkets(): Promise<UnifiedMarket[]> {
-    const response = await fetchWithTimeout(`${GAMMA_BASE}/events?limit=50&active=true`);
+    const response = await fetchWithTimeout(
+      `${GAMMA_BASE}/events?limit=200&active=true&closed=false`,
+    );
     if (!response.ok) {
       throw new Error(`Gamma API error: ${response.status}`);
     }
