@@ -22,21 +22,45 @@ function AccaLegRow({
   leg,
   onRemove,
 }: {
-  leg: { marketId: string; question: string; venue: string; odds: number };
+  leg: {
+    marketId: string;
+    question: string;
+    venue: string;
+    odds: number;
+    selectedOutcome: string;
+    volume: number;
+  };
   onRemove: (id: string) => void;
 }) {
+  const multiplier = leg.odds > 0 ? (1 / leg.odds).toFixed(2) : "—";
+  const isYes = leg.selectedOutcome === "Yes";
+
   return (
-    <div className="flex items-start gap-2 rounded-lg bg-card p-3 border border-border/50">
+    <div className="flex items-start gap-3 rounded-xl bg-card p-3 border border-border/50 group hover:border-border/80 transition-colors">
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2 mb-1">
           <span className={cn("text-xs font-medium", venueColor(leg.venue))}>{leg.venue}</span>
+          <span
+            className={cn(
+              "text-[10px] font-medium px-1.5 py-0.5 rounded",
+              isYes ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400",
+            )}
+          >
+            {leg.selectedOutcome}
+          </span>
         </div>
-        <p className="mt-0.5 truncate text-sm text-muted-foreground">{leg.question}</p>
-        <span className="text-xs text-muted-foreground">Yes @ {(leg.odds * 100).toFixed(1)}%</span>
+        <p className="text-sm text-foreground font-medium leading-snug line-clamp-2 mb-1">
+          {leg.question}
+        </p>
+        <div className="flex items-center gap-3 text-xs text-muted-foreground">
+          <span className="font-mono">{(leg.odds * 100).toFixed(1)}%</span>
+          <span>{multiplier}x</span>
+          <span>Vol: ${(leg.volume / 1000000).toFixed(1)}M</span>
+        </div>
       </div>
       <button
         onClick={() => onRemove(leg.marketId)}
-        className="shrink-0 rounded-md p-1 text-muted-foreground transition-colors hover:bg-secondary hover:text-red-500"
+        className="shrink-0 rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-red-400"
         aria-label="Remove leg"
       >
         <svg
@@ -88,7 +112,7 @@ export function AccaSlip({ onClose }: { onClose?: () => void }) {
             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
           />
         </svg>
-        <h3 className="text-lg font-semibold text-foreground">Acca Submitted!</h3>
+        <h3 className="text-lg font-semibold text-foreground">Parlay Submitted!</h3>
         <p className="mt-1 text-sm text-muted-foreground">Track its progress in Positions</p>
         <button
           onClick={() => {
@@ -109,10 +133,11 @@ export function AccaSlip({ onClose }: { onClose?: () => void }) {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border/50 pb-3">
         <div>
-          <h3 className="font-semibold text-foreground">Parlay Slip</h3>
+          <h3 className="font-semibold text-foreground text-lg">Your Parlay</h3>
           {legCount > 0 && (
             <p className="mt-0.5 text-xs text-muted-foreground">
-              {legCount} leg{legCount > 1 ? "s" : ""} • {legCount < 2 ? "Add more to proceed" : "Ready to stake"}
+              {legCount} leg{legCount > 1 ? "s" : ""} • {""}
+              {legCount < 2 ? "Add more to proceed" : "Ready to stake"}
             </p>
           )}
         </div>
@@ -122,7 +147,7 @@ export function AccaSlip({ onClose }: { onClose?: () => void }) {
               onClick={clearAll}
               className="text-xs text-muted-foreground hover:text-foreground transition-colors"
             >
-              Clear All
+              Remove All
             </button>
           )}
           {onClose && (
@@ -156,8 +181,9 @@ export function AccaSlip({ onClose }: { onClose?: () => void }) {
             </svg>
           </div>
           <h4 className="mb-1 font-semibold text-foreground">Build Your Parlay</h4>
-          <p className="text-xs text-muted-foreground">
-            Tap {String.fromCharCode(34)}+ Add to Parlay{String.fromCharCode(34)} on any market to get started. Combine 2-10 markets for better odds!
+          <p className="text-xs text-muted-foreground max-w-[200px]">
+            Click &quot;Yes&quot; or &quot;No&quot; on any market to add a leg. Combine 2-10 markets
+            for better odds!
           </p>
         </div>
       )}
@@ -166,7 +192,7 @@ export function AccaSlip({ onClose }: { onClose?: () => void }) {
       {legCount > 0 && (
         <div className="space-y-2">
           <div className="flex items-center justify-between px-1">
-            <h4 className="text-sm font-semibold text-foreground">Your Legs</h4>
+            <h4 className="text-sm font-semibold text-foreground">Legs</h4>
             <span className="text-xs text-muted-foreground">{legCount}/10</span>
           </div>
           <div className="space-y-2">
@@ -177,14 +203,18 @@ export function AccaSlip({ onClose }: { onClose?: () => void }) {
         </div>
       )}
 
-      {/* Odds display */}
+      {/* Odds Summary */}
       {legCount >= 2 && (
-        <div className="space-y-2 rounded-xl border border-primary/20 bg-primary/5 p-3">
-          <h4 className="text-xs font-semibold text-foreground">Acca Summary</h4>
-          <div className="space-y-1.5">
+        <div className="space-y-3 rounded-xl border border-primary/20 bg-primary/5 p-4">
+          <h4 className="text-xs font-semibold text-foreground uppercase tracking-wider">
+            Acca Summary
+          </h4>
+          <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Combined Odds</span>
-              <span className="font-mono font-semibold text-foreground">{combinedOdds.toFixed(4)}</span>
+              <span className="font-mono font-semibold text-foreground">
+                {combinedOdds.toFixed(4)}
+              </span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Multiplier</span>
@@ -200,25 +230,95 @@ export function AccaSlip({ onClose }: { onClose?: () => void }) {
         </div>
       )}
 
-      {/* Stake input + payout */}
+      {/* Stake Input */}
       {legCount >= 2 && submit.state !== "reviewing" && (
-        <div className="space-y-2">
+        <div className="space-y-3">
           <div>
-            <label className="mb-1 block text-xs font-medium text-muted-foreground">Stake (USDC)</label>
-            <input
-              type="number"
-              value={stake || ""}
-              onChange={(e) => updateStake(Number(e.target.value))}
-              placeholder="0.00"
-              className="w-full rounded-lg border border-border bg-background px-4 py-3 text-lg outline-none placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring"
-            />
+            <label className="mb-1.5 block text-xs font-medium text-muted-foreground uppercase tracking-wider">
+              Bet Amount (USDC)
+            </label>
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-lg text-muted-foreground">
+                $
+              </span>
+              <input
+                type="number"
+                value={stake || ""}
+                onChange={(e) => updateStake(Number(e.target.value))}
+                placeholder="0.00"
+                className="w-full rounded-lg border border-border bg-card px-4 py-3 pl-8 text-lg font-mono outline-none placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring"
+              />
+            </div>
           </div>
+
+          {/* Quick Amount Buttons */}
+          <div className="flex gap-2">
+            {[5, 10, 20, 50].map((amount) => (
+              <button
+                key={amount}
+                onClick={() => updateStake(amount)}
+                className={cn(
+                  "flex-1 rounded-lg border py-2 text-xs font-medium transition-colors",
+                  stake === amount
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-border bg-card text-muted-foreground hover:text-foreground hover:border-border/80",
+                )}
+              >
+                ${amount}
+              </button>
+            ))}
+          </div>
+
+          {/* Payout Preview */}
           {stake > 0 && combinedOdds > 0 && (
-            <div className="rounded-lg bg-primary/10 px-3 py-2 text-center border border-primary/20">
-              <span className="text-xs text-muted-foreground">Projected Payout: </span>
-              <span className="text-lg font-bold text-primary">${projectedPayout.toFixed(2)}</span>
+            <div className="rounded-xl border border-primary/20 bg-primary/5 px-4 py-3 text-center">
+              <div className="flex items-center justify-center gap-2 text-sm">
+                <span className="text-muted-foreground">${stake.toFixed(2)}</span>
+                <svg
+                  className="h-4 w-4 text-muted-foreground"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+                <span className="text-lg font-bold text-primary">
+                  ${projectedPayout.toFixed(2)}
+                </span>
+                <span className="text-xs text-muted-foreground">(est.)</span>
+              </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Review Step */}
+      {submit.state === "reviewing" && legs.length >= 2 && (
+        <div className="space-y-3 rounded-xl border border-primary/30 bg-primary/10 p-4">
+          <h4 className="text-sm font-semibold text-foreground">Confirm Parlay</h4>
+          <div className="space-y-2 text-sm text-muted-foreground">
+            <div className="flex justify-between">
+              <span>Legs</span>
+              <span className="font-mono text-foreground">{legCount}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Odds</span>
+              <span className="font-mono text-foreground">
+                {combinedOdds.toFixed(4)} ({multiplier}x)
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span>Stake</span>
+              <span className="font-mono text-foreground">${stake.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between border-t border-border/50 pt-2">
+              <span>Payout</span>
+              <span className="font-mono text-primary font-bold">
+                ${projectedPayout.toFixed(2)}
+              </span>
+            </div>
+          </div>
         </div>
       )}
 
@@ -233,21 +333,6 @@ export function AccaSlip({ onClose }: { onClose?: () => void }) {
         </div>
       )}
 
-      {/* Review step */}
-      {submit.state === "reviewing" && legs.length >= 2 && (
-        <div className="space-y-2 rounded-lg border border-primary/30 bg-primary/10 p-3">
-          <h4 className="text-sm font-semibold text-foreground">Confirm Parlay</h4>
-          <div className="space-y-1 text-sm text-muted-foreground">
-            <p>Legs: {legCount}</p>
-            <p>
-              Odds: {combinedOdds.toFixed(4)} ({multiplier}x)
-            </p>
-            <p>Stake: ${stake.toFixed(2)}</p>
-            <p>Payout: ${projectedPayout.toFixed(2)}</p>
-          </div>
-        </div>
-      )}
-
       {/* Error */}
       {submit.error && (
         <div className="rounded-lg bg-destructive/10 p-3">
@@ -255,21 +340,45 @@ export function AccaSlip({ onClose }: { onClose?: () => void }) {
         </div>
       )}
 
-      {/* Submit / Login buttons */}
-      <div className="space-y-2">
+      {/* Submit / Login */}
+      <div className="space-y-2 pt-2">
         {submit.state === "reviewing" ? (
           <button
             onClick={submit.confirm}
-            className="w-full rounded-lg bg-primary py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90 active:scale-95"
+            className="w-full rounded-xl bg-primary py-3.5 font-semibold text-primary-foreground transition-all hover:bg-primary/90 active:scale-[0.98]"
           >
             Confirm & Submit
           </button>
-        ) : submit.state === "submitting" ? null : (
+        ) : submit.state === "submitting" ? (
+          <button
+            disabled
+            className="w-full rounded-xl bg-primary/70 py-3.5 font-medium text-primary-foreground cursor-wait"
+          >
+            <span className="flex items-center justify-center gap-2">
+              <svg className="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
+              </svg>
+              Submitting...
+            </span>
+          </button>
+        ) : (
           <>
             {!authenticated ? (
               <button
                 onClick={login}
-                className="w-full rounded-lg bg-primary py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90 active:scale-95"
+                className="w-full rounded-xl bg-primary py-3.5 font-semibold text-primary-foreground transition-all hover:bg-primary/90 active:scale-[0.98]"
               >
                 Sign In to Place Parlay
               </button>
@@ -277,7 +386,7 @@ export function AccaSlip({ onClose }: { onClose?: () => void }) {
               <button
                 onClick={submit.startReview}
                 disabled={!isValid}
-                className="w-full rounded-lg bg-primary py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="w-full rounded-xl bg-primary py-3.5 font-semibold text-primary-foreground transition-all hover:bg-primary/90 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100"
               >
                 Review Parlay
               </button>
@@ -285,6 +394,13 @@ export function AccaSlip({ onClose }: { onClose?: () => void }) {
           </>
         )}
       </div>
+
+      {/* Disclaimer */}
+      {legCount > 0 && (
+        <p className="text-center text-[10px] text-muted-foreground">
+          Parlay valid for 5 minutes after submission
+        </p>
+      )}
     </div>
   );
 }

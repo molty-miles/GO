@@ -5,24 +5,36 @@ const leg1: AccaLegInput = {
   marketId: "1",
   question: "Will BTC > 100k?",
   venue: "polymarket",
+  slug: "will-btc-100k",
   odds: 0.6,
   selectedOutcome: "Yes",
+  link: "https://polymarket.com/event/will-btc-100k",
+  volume: 1000000,
+  resolutionDate: "2026-12-31",
 };
 
 const leg2: AccaLegInput = {
   marketId: "2",
   question: "Will ETH > 5k?",
   venue: "limitless",
+  slug: "will-eth-5k",
   odds: 0.55,
   selectedOutcome: "Yes",
+  link: "https://limitless.exchange/market/will-eth-5k",
+  volume: 500000,
+  resolutionDate: "2026-12-31",
 };
 
 const leg3: AccaLegInput = {
   marketId: "3",
   question: "Will SOL > 200?",
   venue: "polymarket",
+  slug: "will-sol-200",
   odds: 0.5,
   selectedOutcome: "Yes",
+  link: "https://polymarket.com/event/will-sol-200",
+  volume: 800000,
+  resolutionDate: "2026-12-31",
 };
 
 describe("computeSlipOdds", () => {

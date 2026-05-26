@@ -14,7 +14,7 @@ interface AccaBuilderContextValue {
   projectedPayout: number;
   validationErrors: string[];
   isValid: boolean;
-  addLeg: (market: UnifiedMarket) => void;
+  addLeg: (market: UnifiedMarket, outcome?: "Yes" | "No") => void;
   removeLeg: (marketId: string) => void;
   updateStake: (amount: number) => void;
   clearAll: () => void;

@@ -10,11 +10,18 @@ interface TrendingSectionProps {
 }
 
 export function TrendingSection({ markets, isLoading }: TrendingSectionProps) {
-  const { addLeg } = useAccaBuilderContext();
+  const { addLeg, legs } = useAccaBuilderContext();
 
   const trending = [...markets]
     .sort((a, b) => b.volume - a.volume || b.liquidity - a.liquidity)
     .slice(0, 6);
+
+  const isInParlay = (marketId: string) => legs.find((leg) => leg.marketId === marketId);
+
+  const getParlayOutcome = (marketId: string): "Yes" | "No" | undefined => {
+    const leg = legs.find((l) => l.marketId === marketId);
+    return leg?.selectedOutcome;
+  };
 
   if (isLoading) {
     return (
@@ -35,9 +42,18 @@ export function TrendingSection({ markets, isLoading }: TrendingSectionProps) {
     <section>
       <h2 className="mb-3 text-lg font-bold text-foreground">Trending</h2>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {trending.map((market) => (
-          <MarketCard key={market.id} market={market} onAddLeg={addLeg} />
-        ))}
+        {trending.map((market) => {
+          const leg = isInParlay(market.id);
+          return (
+            <MarketCard
+              key={market.id}
+              market={market}
+              onAddLeg={addLeg}
+              isInParlay={!!leg}
+              parlayOutcome={getParlayOutcome(market.id)}
+            />
+          );
+        })}
       </div>
     </section>
   );

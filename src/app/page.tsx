@@ -10,7 +10,7 @@ export default function HomePage() {
   const [markets, setMarkets] = useState<UnifiedMarket[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { addLeg } = useAccaBuilderContext();
+  const { addLeg, legs } = useAccaBuilderContext();
 
   useEffect(() => {
     let cancelled = false;
@@ -51,7 +51,7 @@ export default function HomePage() {
           {error ? (
             <div className="rounded-xl bg-destructive/10 p-4 text-sm text-destructive">{error}</div>
           ) : (
-            <MarketGrid markets={markets} isLoading={isLoading} onAddLeg={addLeg} />
+            <MarketGrid markets={markets} isLoading={isLoading} onAddLeg={addLeg} legs={legs} />
           )}
         </section>
       </ErrorBoundary>

@@ -1,118 +1,146 @@
-"use client";
-
 import { useState, useMemo } from "react";
 import type { UnifiedMarket } from "@/types/market";
 import { MarketCard } from "@/components/markets/MarketCard";
-import { SearchBar } from "@/components/ui/SearchBar";
-import { MarketGridSkeleton } from "@/components/ui/SkeletonCard";
-import { EmptyState } from "@/components/ui/EmptyState";
-import { flagBestOdds } from "@/lib/aggregation/discovery";
-import { cn } from "@/lib/utils";
+import type { AccaLegInput } from "@/hooks/useAccaBuilder";
 
 interface MarketGridProps {
   markets: UnifiedMarket[];
-  isLoading: boolean;
-  onAddLeg?: (market: UnifiedMarket) => void;
+  isLoading?: boolean;
+  onAddLeg?: (market: UnifiedMarket, outcome?: "Yes" | "No") => void;
+  legs?: AccaLegInput[];
 }
 
-const categories = ["All", "Politics", "Sports", "Crypto", "Entertainment", "Science"];
-const sortOptions = [
-  { value: "trending", label: "Trending" },
-  { value: "volume", label: "Volume" },
-  { value: "resolve", label: "Closing Soon" },
-  { value: "odds", label: "Highest Odds" },
-] as const;
+function flagBestOdds(markets: UnifiedMarket[]): UnifiedMarket[] {
+  // Mark the best odds market per venue
+  const byVenue: Record<string, UnifiedMarket[]> = {};
+  markets.forEach((m) => {
+    if (!byVenue[m.venue]) byVenue[m.venue] = [];
+    byVenue[m.venue].push(m);
+  });
 
-export function MarketGrid({ markets, isLoading, onAddLeg }: MarketGridProps) {
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All");
-  const [sort, setSort] = useState<string>("trending");
+  const bestIds = new Set<string>();
+  Object.values(byVenue).forEach((group) => {
+    if (group.length === 0) return;
+    const best = [...group].sort((a, b) => b.c_yes - a.c_yes)[0];
+    if (best) bestIds.add(best.id);
+  });
+
+  return markets.map((m) => ({ ...m, isBestOdds: bestIds.has(m.id) }));
+}
+
+export function MarketGrid({ markets, isLoading, onAddLeg, legs = [] }: MarketGridProps) {
+  const [filter, setFilter] = useState("");
 
   const flagged = useMemo(() => flagBestOdds(markets), [markets]);
 
-  const filtered = flagged
-    .filter((m) => {
-      if (category !== "All" && !m.category.includes(category)) return false;
-      if (search) {
-        const q = search.toLowerCase();
-        if (!m.question.toLowerCase().includes(q) && !m.slug.toLowerCase().includes(q))
-          return false;
-      }
-      return m.active;
-    })
-    .sort((a, b) => {
-      switch (sort) {
-        case "volume":
-          return b.volume - a.volume;
-        case "resolve":
-          return new Date(a.resolution_date).getTime() - new Date(b.resolution_date).getTime();
-        case "odds":
-          return b.c_yes - a.c_yes;
-        default:
-          return b.volume - a.volume || b.liquidity - a.liquidity;
-      }
-    });
+  const filtered = useMemo(() => {
+    const q = filter.trim().toLowerCase();
+    if (!q) return flagged;
+    return flagged.filter(
+      (m) =>
+        m.question.toLowerCase().includes(q) ||
+        m.venue.toLowerCase().includes(q) ||
+        m.category.some((c) => c.toLowerCase().includes(q)),
+    );
+  }, [flagged, filter]);
+
+  const isInParlay = (marketId: string) => legs.find((leg) => leg.marketId === marketId);
+
+  const getParlayOutcome = (marketId: string): "Yes" | "No" | undefined => {
+    const leg = legs.find((l) => l.marketId === marketId);
+    return leg?.selectedOutcome;
+  };
+
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div key={i} className="h-48 animate-pulse rounded-xl border border-border bg-muted" />
+        ))}
+      </div>
+    );
+  }
+
+  if (filtered.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 text-center">
+        <div className="mb-4 rounded-full bg-primary/10 p-4">
+          <svg
+            className="h-8 w-8 text-primary"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+        </div>
+        <h3 className="text-lg font-semibold text-foreground">No markets found</h3>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Try adjusting your search or check back later
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-3 sm:space-y-4 w-full min-w-0">
-      <SearchBar value={search} onChange={setSearch} />
-
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-2">
-        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 -mx-1 px-1 sm:mx-0 sm:px-0 scrollbar-none">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setCategory(cat)}
-              className={cn(
-                "whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] sm:text-sm font-medium transition-colors shrink-0",
-                category === cat
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-              )}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-        <select
-          value={sort}
-          onChange={(e) => setSort(e.target.value)}
-          className="w-full sm:w-auto sm:ml-auto rounded-full bg-secondary px-3 py-1.5 text-xs sm:text-sm text-secondary-foreground outline-none"
+    <div className="space-y-4">
+      {/* Search Bar */}
+      <div className="relative">
+        <input
+          type="text"
+          placeholder="Search markets..."
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          className="w-full rounded-lg border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring outline-none"
+        />
+        <svg
+          className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
         >
-          {sortOptions.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
+        </svg>
       </div>
 
-      {isLoading ? (
-        <MarketGridSkeleton />
-      ) : filtered.length === 0 ? (
-        <EmptyState
-          title="No markets found"
-          description="Try adjusting your filters or search query"
-          action={{
-            label: "Clear filters",
-            onClick: () => {
-              setSearch("");
-              setCategory("All");
-            },
-          }}
-        />
-      ) : (
-        <div className="grid gap-2 sm:gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((market) => (
+      {/* Results count */}
+      <div className="flex items-center justify-between text-sm text-muted-foreground">
+        <span>
+          {filtered.length} market{filtered.length !== 1 && "s"}
+        </span>
+        {legs.length > 0 && (
+          <span className="text-primary">
+            {legs.length} leg{legs.length !== 1 ? "s" : ""} in parlay
+          </span>
+        )}
+      </div>
+
+      {/* Grid */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {filtered.map((market) => {
+          const leg = isInParlay(market.id);
+          return (
             <MarketCard
               key={market.id}
               market={market}
               onAddLeg={onAddLeg}
+              isInParlay={!!leg}
+              parlayOutcome={getParlayOutcome(market.id)}
               isBestOdds={market.isBestOdds}
             />
-          ))}
-        </div>
-      )}
+          );
+        })}
+      </div>
     </div>
   );
 }

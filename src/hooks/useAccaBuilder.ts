@@ -6,15 +6,19 @@ export interface AccaLegInput {
   marketId: string;
   question: string;
   venue: string;
+  slug: string;
   odds: number;
-  selectedOutcome: string;
+  selectedOutcome: "Yes" | "No";
+  link: string;
+  volume: number;
+  resolutionDate: string;
 }
 
 export function useAccaBuilder() {
   const [legs, setLegs] = useState<AccaLegInput[]>([]);
   const [stake, setStake] = useState(0);
 
-  const addLeg = useCallback((market: UnifiedMarket) => {
+  const addLeg = useCallback((market: UnifiedMarket, outcome: "Yes" | "No" = "Yes") => {
     setLegs((prev) => {
       if (prev.some((l) => l.marketId === market.id)) return prev;
       if (prev.length >= 10) return prev;
@@ -24,8 +28,12 @@ export function useAccaBuilder() {
           marketId: market.id,
           question: market.question,
           venue: market.venue,
-          odds: market.c_yes,
-          selectedOutcome: "Yes",
+          slug: market.slug,
+          odds: outcome === "Yes" ? market.c_yes : 1 - market.c_yes,
+          selectedOutcome: outcome,
+          link: market.link,
+          volume: market.volume,
+          resolutionDate: market.resolution_date,
         },
       ];
     });
