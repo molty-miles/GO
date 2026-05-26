@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "next-themes";
 import { PrivyProvider } from "@/lib/providers/PrivyProvider";
 import { AccaBuilderProvider } from "@/lib/providers/AccaBuilderProvider";
 import { ToastProvider } from "@/components/ui/Toast";
@@ -29,19 +30,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body className="min-h-screen bg-zinc-950 text-white">
-        <PrivyProvider>
-          <AccaBuilderProvider>
-            <ToastProvider>
-              <div className="flex">
-                <NavBar />
-                <main className="min-h-screen flex-1 md:ml-0">{children}</main>
-              </div>
-              <AccaFab />
-            </ToastProvider>
-          </AccaBuilderProvider>
-        </PrivyProvider>
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable}`}
+      suppressHydrationWarning
+    >
+      <body className="min-h-screen bg-background text-foreground">
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+          <PrivyProvider>
+            <AccaBuilderProvider>
+              <ToastProvider>
+                <div className="flex">
+                  <NavBar />
+                  <main className="min-h-screen flex-1 md:ml-0">{children}</main>
+                </div>
+                <AccaFab />
+              </ToastProvider>
+            </AccaBuilderProvider>
+          </PrivyProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

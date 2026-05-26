@@ -36,25 +36,25 @@ export function AccountScreen() {
   return (
     <div className="space-y-6">
       {/* Balance card */}
-      <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-4">
-        <div className="mb-4 text-lg font-semibold text-white">Balance</div>
+      <div className="rounded-xl border bg-card p-4">
+        <div className="mb-4 text-lg font-semibold">Balance</div>
         <div className="grid grid-cols-3 gap-3">
           <div>
-            <div className="text-xs text-zinc-500">Available</div>
-            <div className="text-xl font-bold text-white">{formatUsdc(available)}</div>
+            <div className="text-xs text-muted-foreground">Available</div>
+            <div className="text-xl font-bold">{formatUsdc(available)}</div>
           </div>
           <div>
-            <div className="text-xs text-zinc-500">Deployed</div>
-            <div className="text-xl font-bold text-yellow-400">{formatUsdc(deployedCapital)}</div>
+            <div className="text-xs text-muted-foreground">Deployed</div>
+            <div className="text-xl font-bold text-amber-500">{formatUsdc(deployedCapital)}</div>
           </div>
           <div>
-            <div className="text-xs text-zinc-500">Winnings</div>
-            <div className="text-xl font-bold text-green-400">{formatUsdc(pendingWinnings)}</div>
+            <div className="text-xs text-muted-foreground">Winnings</div>
+            <div className="text-xl font-bold text-emerald-500">{formatUsdc(pendingWinnings)}</div>
           </div>
         </div>
       </div>
 
-      {/* Tabs */}
+      {/* Tabs - shadcn style */}
       <div className="flex gap-2">
         {(["history", "deposit", "withdraw"] as const).map((t) => (
           <button
@@ -63,8 +63,8 @@ export function AccountScreen() {
             className={cn(
               "rounded-full px-4 py-1.5 text-sm font-medium capitalize transition-colors",
               tab === t
-                ? "bg-indigo-600 text-white"
-                : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700",
+                ? "bg-primary text-primary-foreground"
+                : "bg-secondary text-secondary-foreground hover:bg-secondary/80",
             )}
           >
             {t}
@@ -76,38 +76,37 @@ export function AccountScreen() {
       {tab === "history" && (
         <div className="space-y-2">
           {historyMock.map((h, i) => (
-            <div
-              key={i}
-              className="flex items-center justify-between rounded-xl bg-zinc-900 px-4 py-3"
-            >
+            <div key={i} className="flex items-center justify-between rounded-xl bg-card px-4 py-3">
               <div className="flex items-center gap-3">
                 <span
                   className={cn(
                     "text-sm font-medium",
-                    h.type === "deposit" ? "text-green-400" : "text-red-400",
+                    h.type === "deposit" ? "text-emerald-500" : "text-red-500",
                   )}
                 >
                   {h.type === "deposit" ? "+" : "-"}${h.amount}
                 </span>
-                <span className="text-xs text-zinc-500">{h.date}</span>
+                <span className="text-xs text-muted-foreground">{h.date}</span>
               </div>
-              <span className="font-mono text-xs text-zinc-600">{h.txHash.slice(0, 10)}...</span>
+              <span className="font-mono text-xs text-muted-foreground">
+                {h.txHash.slice(0, 10)}...
+              </span>
             </div>
           ))}
         </div>
       )}
 
       {tab === "deposit" && (
-        <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-4">
-          <label className="mb-2 block text-sm text-zinc-400">Amount (USDC)</label>
+        <div className="rounded-xl border bg-card p-4">
+          <label className="mb-2 block text-sm text-muted-foreground">Amount (USDC)</label>
           <input
             type="number"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="0.00"
-            className="mb-3 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-lg text-white outline-none placeholder-zinc-600 focus:border-indigo-500"
+            className="mb-3 w-full rounded-xl border bg-background px-4 py-3 text-lg outline-none placeholder:text-muted-foreground focus:border-ring"
           />
-          {depositError && <p className="mb-2 text-sm text-red-400">{depositError}</p>}
+          {depositError && <p className="mb-2 text-sm text-destructive">{depositError}</p>}
           <button
             onClick={async () => {
               await deposit(Number(amount));
@@ -120,7 +119,7 @@ export function AccountScreen() {
               depositState === "pending" ||
               depositState === "confirming"
             }
-            className="w-full rounded-xl bg-indigo-600 py-3 font-medium text-white transition-colors hover:bg-indigo-500 disabled:opacity-50"
+            className="w-full rounded-xl bg-primary py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
           >
             {depositState === "pending"
               ? "Approving..."
@@ -136,16 +135,16 @@ export function AccountScreen() {
       )}
 
       {tab === "withdraw" && (
-        <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-4">
-          <label className="mb-2 block text-sm text-zinc-400">Amount (USDC)</label>
+        <div className="rounded-xl border bg-card p-4">
+          <label className="mb-2 block text-sm text-muted-foreground">Amount (USDC)</label>
           <input
             type="number"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="0.00"
-            className="mb-3 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-lg text-white outline-none placeholder-zinc-600 focus:border-indigo-500"
+            className="mb-3 w-full rounded-xl border bg-background px-4 py-3 text-lg outline-none placeholder:text-muted-foreground focus:border-ring"
           />
-          {withdrawError && <p className="mb-2 text-sm text-red-400">{withdrawError}</p>}
+          {withdrawError && <p className="mb-2 text-sm text-destructive">{withdrawError}</p>}
           <button
             onClick={async () => {
               await withdraw(Number(amount));
@@ -158,7 +157,7 @@ export function AccountScreen() {
               withdrawState === "pending" ||
               withdrawState === "confirming"
             }
-            className="w-full rounded-xl bg-red-600 py-3 font-medium text-white transition-colors hover:bg-red-500 disabled:opacity-50"
+            className="w-full rounded-xl bg-destructive py-3 font-medium text-destructive-foreground transition-colors hover:bg-destructive/90 disabled:opacity-50"
           >
             {withdrawState === "pending"
               ? "Processing..."
@@ -175,7 +174,7 @@ export function AccountScreen() {
       {address && (
         <button
           onClick={exportWallet}
-          className="w-full rounded-xl border border-zinc-800 py-3 text-sm text-zinc-400 transition-colors hover:bg-zinc-900"
+          className="w-full rounded-xl border py-3 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
         >
           Export Wallet
         </button>

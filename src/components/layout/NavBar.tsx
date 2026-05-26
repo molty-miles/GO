@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 const navItems = [
   {
@@ -70,8 +71,11 @@ export function NavBar() {
   return (
     <>
       {/* Desktop sidebar */}
-      <nav className="hidden w-56 shrink-0 border-r border-zinc-800 bg-zinc-950 p-4 md:flex md:flex-col md:gap-1">
-        <div className="mb-6 px-3 text-lg font-bold text-white">GO Market</div>
+      <nav className="hidden w-56 shrink-0 border-r border-border bg-background p-4 md:flex md:flex-col md:gap-1">
+        <div className="mb-6 flex items-center justify-between px-3">
+          <div className="text-lg font-semibold tracking-tight">GO Market</div>
+          <ThemeToggle />
+        </div>
         {navItems.map((item) => (
           <Link
             key={item.href}
@@ -79,8 +83,8 @@ export function NavBar() {
             className={cn(
               "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
               pathname === item.href
-                ? "bg-indigo-600/20 text-indigo-400"
-                : "text-zinc-400 hover:bg-zinc-800 hover:text-white",
+                ? "bg-primary/10 text-primary"
+                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
             )}
           >
             {item.icon}
@@ -89,8 +93,8 @@ export function NavBar() {
         ))}
       </nav>
 
-      {/* Mobile bottom nav */}
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-zinc-800 bg-zinc-950 md:hidden">
+      {/* Mobile floating bottom nav */}
+      <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 backdrop-blur md:hidden">
         <div className="flex items-center justify-around py-2">
           {navItems.map((item) => (
             <Link
@@ -98,7 +102,7 @@ export function NavBar() {
               href={item.href}
               className={cn(
                 "flex flex-col items-center gap-0.5 px-3 py-1 text-xs font-medium transition-colors",
-                pathname === item.href ? "text-indigo-400" : "text-zinc-500 hover:text-zinc-300",
+                pathname === item.href ? "text-primary" : "text-muted-foreground",
               )}
             >
               {item.icon}

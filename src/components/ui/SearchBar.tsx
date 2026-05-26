@@ -19,7 +19,7 @@ export function SearchBar({ value, onChange, placeholder = "Search markets..." }
   return (
     <div className="relative">
       <svg
-        className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500"
+        className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -36,7 +36,7 @@ export function SearchBar({ value, onChange, placeholder = "Search markets..." }
         value={local}
         onChange={(e) => setLocal(e.target.value)}
         placeholder={placeholder}
-        className="w-full rounded-xl border border-zinc-800 bg-zinc-900 py-2.5 pl-10 pr-4 text-sm text-white placeholder-zinc-500 outline-none transition-colors focus:border-indigo-500"
+        className="w-full rounded-xl border bg-card py-2.5 pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground outline-none transition-colors focus:border-ring"
       />
     </div>
   );

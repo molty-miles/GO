@@ -58,8 +58,8 @@ export function MarketCard({ market, onAddLeg, isBestOdds }: MarketCardProps) {
   return (
     <div
       className={cn(
-        "group relative rounded-xl border bg-zinc-900 p-4 transition-colors hover:border-zinc-700",
-        isBestOdds ? "border-green-600/40" : "border-zinc-800",
+        "group relative rounded-xl border bg-card p-4 transition-colors hover:border-zinc-700",
+        isBestOdds ? "border-emerald-500/40" : "border-border",
       )}
     >
       {isBestOdds && (
@@ -75,14 +75,17 @@ export function MarketCard({ market, onAddLeg, isBestOdds }: MarketCardProps) {
           {market.venue}
         </span>
         {market.category.slice(0, 2).map((cat) => (
-          <span key={cat} className="rounded-md bg-zinc-800 px-2 py-0.5 text-xs text-zinc-400">
+          <span
+            key={cat}
+            className="rounded-md bg-secondary px-2 py-0.5 text-xs text-muted-foreground"
+          >
             {cat}
           </span>
         ))}
       </div>
 
       <Link href={`/markets/${market.id}`} className="block">
-        <h3 className="mb-3 text-sm font-medium leading-snug text-white hover:text-indigo-400">
+        <h3 className="mb-3 text-sm font-medium leading-snug text-foreground hover:text-primary">
           {market.question}
         </h3>
       </Link>
@@ -97,7 +100,7 @@ export function MarketCard({ market, onAddLeg, isBestOdds }: MarketCardProps) {
           <div className="flex items-center gap-2">
             <span
               className={cn(
-                "text-lg font-bold text-white transition-colors",
+                "text-lg font-bold text-foreground transition-colors",
                 priceChanged && "text-green-400",
               )}
             >
@@ -105,17 +108,17 @@ export function MarketCard({ market, onAddLeg, isBestOdds }: MarketCardProps) {
             </span>
             {priceChanged && <span className="h-2 w-2 animate-pulse rounded-full bg-green-500" />}
           </div>
-          <div className="text-xs text-zinc-500">{multiplier}x</div>
+          <div className="text-xs text-muted-foreground">{multiplier}x</div>
         </div>
 
-        <div className="text-right text-xs text-zinc-500">
+        <div className="text-right text-xs text-muted-foreground">
           <div>Vol: {market.volume.toLocaleString()}</div>
         </div>
 
         {onAddLeg && (
           <button
             onClick={() => onAddLeg(market)}
-            className="rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white opacity-0 transition-all hover:bg-indigo-500 group-hover:opacity-100"
+            className="rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground opacity-0 transition-all hover:bg-primary/90 group-hover:opacity-100"
           >
             + Add
           </button>

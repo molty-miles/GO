@@ -41,8 +41,10 @@ export default function HomePage() {
   return (
     <div className="space-y-8 p-4 pb-24 md:pb-4">
       <div>
-        <h1 className="text-xl font-bold text-white">GO Market</h1>
-        <p className="text-sm text-zinc-500">Cross-platform prediction market accumulator</p>
+        <h1 className="text-xl font-bold">GO Market</h1>
+        <p className="text-sm text-muted-foreground">
+          Cross-platform prediction market accumulator
+        </p>
       </div>
 
       <ErrorBoundary>
@@ -59,9 +61,9 @@ export default function HomePage() {
 
       <ErrorBoundary>
         <section>
-          <h2 className="mb-3 text-lg font-bold text-white">All Markets</h2>
+          <h2 className="mb-3 text-lg font-bold">All Markets</h2>
           {error ? (
-            <div className="rounded-xl bg-red-900/20 p-4 text-sm text-red-400">{error}</div>
+            <div className="rounded-xl bg-destructive/10 p-4 text-sm text-destructive">{error}</div>
           ) : (
             <MarketGrid markets={markets} isLoading={isLoading} />
           )}

@@ -75,10 +75,10 @@ export default function MarketDetailPage({ params }: { params: Promise<{ id: str
   if (error || !market) {
     return (
       <div className="flex flex-col items-center py-16 text-center">
-        <h2 className="text-lg font-medium text-zinc-300">{error ?? "Market not found"}</h2>
+        <h2 className="text-lg font-medium text-foreground">{error ?? "Market not found"}</h2>
         <button
           onClick={() => router.push("/")}
-          className="mt-4 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white"
+          className="mt-4 rounded-xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
         >
           Back to Markets
         </button>
@@ -98,7 +98,7 @@ export default function MarketDetailPage({ params }: { params: Promise<{ id: str
     <div className="p-4 pb-24 md:pb-4">
       <button
         onClick={() => router.back()}
-        className="mb-4 flex items-center gap-1 text-sm text-zinc-400 hover:text-white"
+        className="mb-4 flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
       >
         <svg
           className="h-4 w-4"
@@ -113,7 +113,7 @@ export default function MarketDetailPage({ params }: { params: Promise<{ id: str
       </button>
 
       <div className="mx-auto max-w-2xl">
-        <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-6">
+        <div className="rounded-xl border bg-card p-6">
           <div className="mb-4 flex items-center gap-2">
             <span
               className={cn("rounded-md px-2.5 py-1 text-sm font-medium", venueColor(market.venue))}
@@ -121,45 +121,48 @@ export default function MarketDetailPage({ params }: { params: Promise<{ id: str
               {market.venue}
             </span>
             {market.category.slice(0, 2).map((cat) => (
-              <span key={cat} className="rounded-md bg-zinc-800 px-2.5 py-1 text-sm text-zinc-400">
+              <span
+                key={cat}
+                className="rounded-md bg-secondary px-2.5 py-1 text-sm text-secondary-foreground"
+              >
                 {cat}
               </span>
             ))}
           </div>
 
-          <h1 className="mb-4 text-xl font-bold leading-snug text-white">{market.question}</h1>
+          <h1 className="mb-4 text-xl font-bold leading-snug text-foreground">{market.question}</h1>
 
-          <div className="mb-6 grid grid-cols-2 gap-4 rounded-xl bg-zinc-950 p-4">
+          <div className="mb-6 grid grid-cols-2 gap-4 rounded-xl bg-background p-4">
             <div className="text-center">
-              <div className="text-3xl font-bold text-white">
+              <div className="text-3xl font-bold text-foreground">
                 {(market.c_yes * 100).toFixed(1)}%
               </div>
-              <div className="text-sm text-zinc-500">Yes Probability</div>
+              <div className="text-sm text-muted-foreground">Yes Probability</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-indigo-400">{multiplier}x</div>
-              <div className="text-sm text-zinc-500">Multiplier</div>
+              <div className="text-3xl font-bold text-primary">{multiplier}x</div>
+              <div className="text-sm text-muted-foreground">Multiplier</div>
             </div>
           </div>
 
           <div className="mb-6 space-y-3">
             <div className="flex justify-between text-sm">
-              <span className="text-zinc-400">Volume</span>
-              <span className="text-white">${market.volume.toLocaleString()}</span>
+              <span className="text-muted-foreground">Volume</span>
+              <span className="text-foreground">${market.volume.toLocaleString()}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-zinc-400">Liquidity</span>
-              <span className="text-white">${market.liquidity.toLocaleString()}</span>
+              <span className="text-muted-foreground">Liquidity</span>
+              <span className="text-foreground">${market.liquidity.toLocaleString()}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-zinc-400">Resolution Date</span>
-              <span className="text-white">
+              <span className="text-muted-foreground">Resolution Date</span>
+              <span className="text-foreground">
                 {new Date(market.resolution_date).toLocaleDateString()}
               </span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-zinc-400">Slug</span>
-              <span className="font-mono text-zinc-500">{market.slug}</span>
+              <span className="text-muted-foreground">Slug</span>
+              <span className="font-mono text-muted-foreground">{market.slug}</span>
             </div>
           </div>
 
@@ -167,8 +170,8 @@ export default function MarketDetailPage({ params }: { params: Promise<{ id: str
             <button
               onClick={handleAddLeg}
               className={cn(
-                "w-full rounded-xl py-3 font-medium text-white transition-all",
-                added ? "bg-green-600" : "bg-indigo-600 hover:bg-indigo-500",
+                "w-full rounded-xl py-3 font-medium text-primary-foreground transition-all",
+                added ? "bg-green-600" : "bg-primary hover:bg-primary/90",
               )}
             >
               {added
@@ -181,7 +184,7 @@ export default function MarketDetailPage({ params }: { params: Promise<{ id: str
                 href={venueUrl(market.venue, market.slug)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full rounded-xl border border-zinc-800 py-3 text-center text-sm text-zinc-400 transition-colors hover:bg-zinc-800"
+                className="block w-full rounded-xl border py-3 text-center text-sm text-muted-foreground transition-colors hover:bg-secondary"
               >
                 View on {market.venue}
               </a>

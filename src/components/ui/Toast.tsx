@@ -40,8 +40,8 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             className={cn(
               "animate-slide-up rounded-xl px-4 py-3 text-sm font-medium shadow-lg transition-all",
               t.type === "success" && "bg-green-600 text-white",
-              t.type === "error" && "bg-red-600 text-white",
-              t.type === "info" && "bg-zinc-800 text-zinc-200",
+              t.type === "error" && "bg-destructive text-destructive-foreground",
+              t.type === "info" && "bg-card text-card-foreground border",
             )}
           >
             {t.message}

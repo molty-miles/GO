@@ -27,21 +27,21 @@ const MOCK_PICKS: Pick[] = [
 export function EditorialPicks() {
   return (
     <section>
-      <h2 className="mb-3 text-lg font-bold text-white">Editorial Picks</h2>
+      <h2 className="mb-3 text-lg font-bold text-foreground">Editorial Picks</h2>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {MOCK_PICKS.map((pick, i) => (
           <div
             key={i}
-            className="rounded-xl border border-indigo-600/20 bg-indigo-950/20 p-4 transition-colors hover:border-indigo-600/40"
+            className="rounded-xl border border-primary/20 bg-primary/10 p-4 transition-colors hover:border-primary/40"
           >
             <div className="mb-1 flex items-center gap-2">
-              <span className="rounded-md bg-indigo-600/30 px-2 py-0.5 text-xs font-medium text-indigo-300">
+              <span className="rounded-md bg-primary/30 px-2 py-0.5 text-xs font-medium text-primary">
                 Editor&apos;s Pick
               </span>
             </div>
-            <h3 className="mb-1 text-sm font-semibold text-white">{pick.title}</h3>
-            <p className="mb-2 text-sm text-zinc-400">{pick.description}</p>
-            <span className="text-xs text-indigo-400">{pick.conviction}</span>
+            <h3 className="mb-1 text-sm font-semibold text-foreground">{pick.title}</h3>
+            <p className="mb-2 text-sm text-muted-foreground">{pick.description}</p>
+            <span className="text-xs text-primary">{pick.conviction}</span>
           </div>
         ))}
       </div>

@@ -65,8 +65,8 @@ export function MarketGrid({ markets, isLoading, onAddLeg }: MarketGridProps) {
             className={cn(
               "whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
               category === cat
-                ? "bg-indigo-600 text-white"
-                : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700",
+                ? "bg-primary text-primary-foreground"
+                : "bg-secondary text-secondary-foreground hover:bg-secondary/80",
             )}
           >
             {cat}
@@ -75,7 +75,7 @@ export function MarketGrid({ markets, isLoading, onAddLeg }: MarketGridProps) {
         <select
           value={sort}
           onChange={(e) => setSort(e.target.value)}
-          className="ml-auto rounded-full bg-zinc-800 px-3 py-1.5 text-sm text-zinc-400 outline-none"
+          className="ml-auto rounded-full bg-secondary px-3 py-1.5 text-sm text-secondary-foreground outline-none"
         >
           {sortOptions.map((opt) => (
             <option key={opt.value} value={opt.value}>

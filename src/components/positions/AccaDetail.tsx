@@ -39,16 +39,16 @@ export function AccaDetail({ acca, onClose }: AccaDetailProps) {
   return (
     <>
       <div className="fixed inset-0 z-40 bg-black/60" onClick={onClose} />
-      <div className="fixed inset-x-0 bottom-0 z-50 max-h-[85vh] overflow-auto rounded-t-2xl border-t border-zinc-800 bg-zinc-950 p-4 md:inset-x-auto md:right-4 md:top-24 md:w-96 md:rounded-2xl md:border">
+      <div className="fixed inset-x-0 bottom-0 z-50 max-h-[85vh] overflow-auto rounded-t-2xl border-t bg-background p-4 md:inset-x-auto md:right-4 md:top-24 md:w-96 md:rounded-2xl md:border">
         {/* Header */}
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <h3 className="font-semibold text-white">Acca Detail</h3>
-            <p className="text-xs text-zinc-500">{acca.id}</p>
+            <h3 className="font-semibold text-foreground">Acca Detail</h3>
+            <p className="text-xs text-muted-foreground">{acca.id}</p>
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-1 text-zinc-500 hover:bg-zinc-800 hover:text-white"
+            className="rounded-lg p-1 text-muted-foreground hover:bg-secondary hover:text-accent-foreground"
           >
             <svg
               className="h-5 w-5"
@@ -69,16 +69,16 @@ export function AccaDetail({ acca, onClose }: AccaDetailProps) {
           >
             {acca.status}
           </span>
-          <span className="text-xs text-zinc-500">
+          <span className="text-xs text-muted-foreground">
             {resolved}/{total} legs resolved
           </span>
         </div>
 
         {/* Legs */}
         <div className="mb-4 space-y-2">
-          <h4 className="text-sm font-medium text-zinc-400">Legs</h4>
+          <h4 className="text-sm font-medium text-muted-foreground">Legs</h4>
           {acca.legs.map((leg, i) => (
-            <div key={i} className="rounded-lg border border-zinc-800 bg-zinc-900 p-3">
+            <div key={i} className="rounded-lg border bg-card p-3">
               <div className="flex items-center gap-1.5">
                 <span className={cn("text-xs font-medium", venueColor(leg.venue))}>
                   {leg.venue}
@@ -92,8 +92,8 @@ export function AccaDetail({ acca, onClose }: AccaDetailProps) {
                   {leg.state}
                 </span>
               </div>
-              <p className="mt-1 text-sm text-zinc-300">{leg.question}</p>
-              <p className="mt-0.5 text-xs text-zinc-500">
+              <p className="mt-1 text-sm text-muted-foreground">{leg.question}</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">
                 {leg.selectedOutcome} @ {(leg.odds * 100).toFixed(1)}%
               </p>
             </div>
@@ -101,18 +101,18 @@ export function AccaDetail({ acca, onClose }: AccaDetailProps) {
         </div>
 
         {/* Summary */}
-        <div className="space-y-2 rounded-xl bg-zinc-900 p-3">
+        <div className="space-y-2 rounded-xl bg-card p-3">
           <div className="flex justify-between text-sm">
-            <span className="text-zinc-400">Stake</span>
-            <span className="text-white">${acca.stake.toFixed(2)}</span>
+            <span className="text-muted-foreground">Stake</span>
+            <span className="text-foreground">${acca.stake.toFixed(2)}</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-zinc-400">Combined Odds</span>
-            <span className="text-white">{acca.combinedOdds.toFixed(4)}</span>
+            <span className="text-muted-foreground">Combined Odds</span>
+            <span className="text-foreground">{acca.combinedOdds.toFixed(4)}</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-zinc-400">Projected Payout</span>
-            <span className={cn(acca.status === "WON" ? "text-green-400" : "text-white")}>
+            <span className="text-muted-foreground">Projected Payout</span>
+            <span className={cn(acca.status === "WON" ? "text-emerald-500" : "text-foreground")}>
               ${acca.projectedPayout.toFixed(2)}
             </span>
           </div>
