@@ -66,16 +66,17 @@ export function MarketCard({ market, onAddLeg, isBestOdds }: MarketCardProps) {
     <div
       className={cn(
         "group relative flex flex-col rounded-xl border bg-card p-3 sm:p-4 transition-colors hover:border-zinc-700 w-full min-w-0",
+        "market-card",
         isBestOdds ? "border-emerald-500/40" : "border-border",
       )}
     >
       {isBestOdds && (
-        <span className="absolute right-1 top-1 rounded-md bg-green-600/20 px-1.5 py-0.5 text-[10px] font-medium text-green-400 leading-tight sm:right-2 sm:top-2 sm:px-2 sm:text-xs">
+        <span className="absolute right-1 top-1 z-10 rounded-md bg-green-600/20 px-1.5 py-0.5 text-[10px] font-medium text-green-400 leading-tight sm:right-2 sm:top-2 sm:px-2 sm:text-xs">
           Best Odds
         </span>
       )}
 
-      <div className="mb-1.5 flex flex-wrap items-center gap-1">
+      <div className="mb-1.5 flex flex-wrap items-center gap-1 pr-4 sm:pr-0">
         <span
           className={cn("rounded px-1.5 py-0.5 text-[10px] font-medium", venueColor(market.venue))}
         >
@@ -92,7 +93,7 @@ export function MarketCard({ market, onAddLeg, isBestOdds }: MarketCardProps) {
       </div>
 
       <Link href={`/markets/${market.id}`} className="block flex-1">
-        <h3 className="mb-1.5 text-xs sm:text-sm font-medium leading-snug text-foreground hover:text-primary line-clamp-2">
+        <h3 className="mb-1.5 pr-5 sm:pr-6 market-card-question text-xs sm:text-sm font-medium leading-snug text-foreground hover:text-primary line-clamp-2">
           {market.question}
         </h3>
       </Link>
@@ -108,7 +109,7 @@ export function MarketCard({ market, onAddLeg, isBestOdds }: MarketCardProps) {
             <div className="flex items-center gap-1">
               <span
                 className={cn(
-                  "text-base sm:text-lg font-bold text-foreground transition-colors",
+                  "market-card-odds text-base sm:text-lg font-bold text-foreground transition-colors",
                   priceChanged && "text-green-400",
                 )}
               >
@@ -118,10 +119,12 @@ export function MarketCard({ market, onAddLeg, isBestOdds }: MarketCardProps) {
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-green-500 sm:h-2 sm:w-2" />
               )}
             </div>
-            <div className="text-[10px] sm:text-xs text-muted-foreground">{multiplier}x</div>
+            <div className="market-card-label text-[10px] sm:text-xs text-muted-foreground">
+              {multiplier}x
+            </div>
           </div>
 
-          <div className="shrink-0 text-right text-[10px] sm:text-xs text-muted-foreground">
+          <div className="shrink-0 text-right market-card-label text-[10px] sm:text-xs text-muted-foreground">
             <div>Vol: {market.volume.toLocaleString()}</div>
           </div>
         </div>
@@ -130,7 +133,7 @@ export function MarketCard({ market, onAddLeg, isBestOdds }: MarketCardProps) {
           <button
             onClick={handleAddLeg}
             className={cn(
-              "w-full rounded-lg px-2 py-1.5 text-xs font-medium transition-all active:scale-95 flex items-center justify-center gap-1.5",
+              "market-card-btn w-full rounded-lg px-2 py-1.5 text-xs font-medium transition-all active:scale-95 flex items-center justify-center gap-1.5",
               addedFeedback
                 ? "bg-green-600 text-white"
                 : "bg-primary text-primary-foreground hover:bg-primary/90",

@@ -24,6 +24,13 @@ export const metadata: Metadata = {
     "Combine prediction market bets from Polymarket, Kalshi, and Limitless into a single accumulator ticket.",
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
