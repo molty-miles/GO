@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useUser } from "@/hooks/useUser";
 import type { Leg, AccaStatus } from "@/types/acca";
-
 export interface AccaPosition {
   id: string;
   legs: Leg[];
@@ -40,7 +39,7 @@ export function useAccas() {
               stake: a.stake,
               combinedOdds: Number(a.combinedOdds ?? 1) / 1e18,
               projectedPayout: a.potentialPayout,
-              status: a.status ?? "OPEN",
+              status: (a.status ?? "OPEN") as AccaStatus,
               createdAt: new Date((a.expiresAt - 3600) * 1000).toISOString(),
             }),
           );
