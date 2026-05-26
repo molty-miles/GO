@@ -38,10 +38,10 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="p-4 pb-24 pt-14 md:p-6 md:pb-4 md:pt-0">
-      <div className="mb-6">
-        <h1 className="text-xl font-bold">Markets</h1>
-        <p className="text-sm text-muted-foreground">
+    <div className="w-full max-w-full overflow-hidden p-4 pb-24 pt-14 md:mx-auto md:max-w-7xl md:p-6 md:pb-4 md:pt-0">
+      <div className="mb-4 sm:mb-6">
+        <h1 className="text-lg sm:text-xl font-bold">Markets</h1>
+        <p className="text-xs sm:text-sm text-muted-foreground">
           Browse and combine prediction markets into accumulator tickets
         </p>
       </div>

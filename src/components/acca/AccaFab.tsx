@@ -17,7 +17,7 @@ export function AccaFab() {
             className="fixed inset-0 z-40 bg-black/40 md:hidden"
             onClick={() => setOpen(false)}
           />
-          <div className="fixed inset-x-0 bottom-16 z-50 mx-4 max-h-[70vh] overflow-auto rounded-t-2xl border border-border bg-background p-4 shadow-2xl md:bottom-auto md:right-4 md:top-24 md:mx-0 md:w-80 md:max-h-[80vh] md:rounded-2xl">
+          <div className="fixed inset-x-0 bottom-20 z-50 mx-3 max-h-[65vh] overflow-auto rounded-t-2xl border border-border bg-background p-4 shadow-2xl md:bottom-auto md:right-4 md:top-24 md:mx-0 md:w-80 md:max-h-[80vh] md:rounded-2xl">
             <AccaSlip onClose={() => setOpen(false)} />
           </div>
         </>

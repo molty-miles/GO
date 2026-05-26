@@ -54,17 +54,17 @@ export function MarketGrid({ markets, isLoading, onAddLeg }: MarketGridProps) {
     });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3 sm:space-y-4 w-full min-w-0">
       <SearchBar value={search} onChange={setSearch} />
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-2 overflow-x-auto pb-1">
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 -mx-1 px-1 sm:mx-0 sm:px-0 scrollbar-none">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setCategory(cat)}
               className={cn(
-                "whitespace-nowrap rounded-full px-3 py-1.5 text-xs sm:text-sm font-medium transition-colors",
+                "whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] sm:text-sm font-medium transition-colors shrink-0",
                 category === cat
                   ? "bg-primary text-primary-foreground"
                   : "bg-secondary text-secondary-foreground hover:bg-secondary/80",
@@ -77,7 +77,7 @@ export function MarketGrid({ markets, isLoading, onAddLeg }: MarketGridProps) {
         <select
           value={sort}
           onChange={(e) => setSort(e.target.value)}
-          className="sm:ml-auto rounded-full bg-secondary px-3 py-1.5 text-xs sm:text-sm text-secondary-foreground outline-none"
+          className="w-full sm:w-auto sm:ml-auto rounded-full bg-secondary px-3 py-1.5 text-xs sm:text-sm text-secondary-foreground outline-none"
         >
           {sortOptions.map((opt) => (
             <option key={opt.value} value={opt.value}>

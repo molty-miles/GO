@@ -100,8 +100,8 @@ export function NavBar() {
       </div>
 
       {/* Mobile floating bottom nav */}
-      <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 backdrop-blur md:hidden">
-        <div className="flex items-center justify-around py-2">
+      <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 backdrop-blur md:hidden overflow-x-hidden">
+        <div className="flex items-center justify-around py-2 max-w-full">
           {navItems.map((item) => (
             <Link
               key={item.href}
