@@ -76,19 +76,33 @@
 }
 
 /* Base styles */
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 html {
   height: 100%;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 body {
   min-height: 100%;
+  width: 100%;
+  overflow-x: hidden;
   font-family: var(--font-geist-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Prevent long words from breaking layout on small screens */
+img,
+video,
+svg {
+  max-width: 100%;
+  height: auto;
 }
 
 /* Utility for smooth theme transitions */
