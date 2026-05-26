@@ -5,6 +5,5 @@
 .prettier*
 jest.config.ts
 jest.setup.ts
-tsconfig.json
-next.config.ts
+# tsconfig.json and next.config.ts are required for @/ path alias resolution
 src/__tests__
