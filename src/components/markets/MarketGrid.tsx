@@ -57,25 +57,27 @@ export function MarketGrid({ markets, isLoading, onAddLeg }: MarketGridProps) {
     <div className="space-y-4">
       <SearchBar value={search} onChange={setSearch} />
 
-      <div className="flex items-center gap-2 overflow-x-auto pb-1">
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setCategory(cat)}
-            className={cn(
-              "whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
-              category === cat
-                ? "bg-primary text-primary-foreground"
-                : "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-            )}
-          >
-            {cat}
-          </button>
-        ))}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-2 overflow-x-auto pb-1">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setCategory(cat)}
+              className={cn(
+                "whitespace-nowrap rounded-full px-3 py-1.5 text-xs sm:text-sm font-medium transition-colors",
+                category === cat
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+              )}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
         <select
           value={sort}
           onChange={(e) => setSort(e.target.value)}
-          className="ml-auto rounded-full bg-secondary px-3 py-1.5 text-sm text-secondary-foreground outline-none"
+          className="sm:ml-auto rounded-full bg-secondary px-3 py-1.5 text-xs sm:text-sm text-secondary-foreground outline-none"
         >
           {sortOptions.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -100,7 +102,7 @@ export function MarketGrid({ markets, isLoading, onAddLeg }: MarketGridProps) {
           }}
         />
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-2 sm:gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((market) => (
             <MarketCard
               key={market.id}

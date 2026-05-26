@@ -3,12 +3,14 @@
 import { useState, useEffect } from "react";
 import { MarketGrid } from "@/components/markets/MarketGrid";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
+import { useAccaBuilderContext } from "@/lib/providers/AccaBuilderProvider";
 import type { UnifiedMarket } from "@/types/market";
 
 export default function HomePage() {
   const [markets, setMarkets] = useState<UnifiedMarket[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { addLeg } = useAccaBuilderContext();
 
   useEffect(() => {
     let cancelled = false;
@@ -49,7 +51,7 @@ export default function HomePage() {
           {error ? (
             <div className="rounded-xl bg-destructive/10 p-4 text-sm text-destructive">{error}</div>
           ) : (
-            <MarketGrid markets={markets} isLoading={isLoading} />
+            <MarketGrid markets={markets} isLoading={isLoading} onAddLeg={addLeg} />
           )}
         </section>
       </ErrorBoundary>
