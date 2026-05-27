@@ -73,11 +73,11 @@ export function NavBar() {
     <>
       {/* Desktop sidebar */}
       <nav className="hidden w-56 shrink-0 border-r border-border bg-background md:flex md:flex-col">
-        <div className="flex items-center justify-between border-b border-border px-4 py-4">
+        <div className="relative flex items-center justify-between border-b border-border px-4 py-4">
           <div className="text-lg font-semibold tracking-tight">GO</div>
-          <div className="flex flex-col items-center gap-2">
+          <ThemeToggle />
+          <div className="absolute right-0 top-0">
             <MoreMenu />
-            <ThemeToggle />
           </div>
         </div>
         <div className="flex-1 space-y-0.5 p-3">
