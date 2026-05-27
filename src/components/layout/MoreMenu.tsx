@@ -3,9 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Menu, X, ExternalLink } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { FeedbackModal } from "./FeedbackModal";
 
-export function MoreMenu() {
+export function MoreMenu({ align = "top" }: { align?: "top" | "bottom" }) {
   const [open, setOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
 
@@ -24,17 +25,20 @@ export function MoreMenu() {
         </button>
 
         {open && (
-          <div className="absolute right-0 mt-2 w-48 rounded-xl border border-border bg-background shadow-lg z-50 py-1">
-            <a
+          <div 
+            className={cn(
+              "absolute right-0 w-48 rounded-xl border border-border bg-background shadow-lg z-50 py-1",
+              align === "top" ? "top-full mt-2" : "bottom-full mb-2"
+            )}
+          >
+            <Link
               href="/doc"
-              target="_blank"
-              rel="noopener noreferrer"
               className="flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-accent hover:text-accent-foreground"
               onClick={closeMenu}
             >
               <ExternalLink className="h-4 w-4" />
               Docs
-            </a>
+            </Link>
 
             <Link
               href="/leaderboard"

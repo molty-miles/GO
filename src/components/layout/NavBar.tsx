@@ -68,6 +68,9 @@ const navItems = [
 
 export function NavBar() {
   const pathname = usePathname();
+  const isDocPage = pathname?.startsWith("/doc");
+
+  if (isDocPage) return null;
 
   return (
     <>
@@ -76,25 +79,29 @@ export function NavBar() {
         <div className="mb-6 flex items-center justify-between px-3">
           <div className="text-lg font-semibold tracking-tight">GO Market</div>
           <div className="flex items-center gap-2">
-            <MoreMenu />
             <ThemeToggle />
           </div>
         </div>
-        {navItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={cn(
-              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
-              pathname === item.href
-                ? "bg-primary/10 text-primary"
-                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-            )}
-          >
-            {item.icon}
-            {item.label}
-          </Link>
-        ))}
+        <div className="flex-1 space-y-1">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+                pathname === item.href
+                  ? "bg-primary/10 text-primary"
+                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+              )}
+            >
+              {item.icon}
+              {item.label}
+            </Link>
+          ))}
+        </div>
+        <div className="mt-auto pt-4 px-3">
+          <MoreMenu align="bottom" />
+        </div>
       </nav>
 
       {/* Mobile top bar */}

@@ -43,13 +43,18 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-screen overflow-x-hidden bg-background text-foreground">
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
           <PrivyProvider>
             <AccaBuilderProvider>
               <ToastProvider>
-                <div className="flex">
+                <div className="flex min-h-screen">
                   <NavBar />
-                  <main className="min-h-screen flex-1 md:ml-0">{children}</main>
+                  <main className="flex-1 overflow-x-hidden">{children}</main>
                 </div>
                 <AccaFab />
               </ToastProvider>

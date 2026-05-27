@@ -3,10 +3,14 @@
 import { useState } from "react";
 import { AccaSlip } from "@/components/acca/AccaSlip";
 import { useAccaBuilderContext } from "@/lib/providers/AccaBuilderProvider";
+import { usePathname } from "next/navigation";
 
 export function AccaFab() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const { legCount } = useAccaBuilderContext();
+
+  if (pathname?.startsWith("/doc")) return null;
 
   return (
     <>
