@@ -1,6 +1,9 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResend() {
+  if (!process.env.RESEND_API_KEY) return null;
+  return new Resend(process.env.RESEND_API_KEY);
+}
 
 export async function POST(request: Request) {
   try {
@@ -10,6 +13,12 @@ export async function POST(request: Request) {
       return new Response(JSON.stringify({ error: "Subject and message are required" }), {
         status: 400,
       });
+    }
+
+    const resend = getResend();
+    if (!resend) {
+      console.warn("Feedback: RESEND_API_KEY not configured, skipping email send.");
+      return new Response(JSON.stringify({ success: true }), { status: 200 });
     }
 
     const html = `
