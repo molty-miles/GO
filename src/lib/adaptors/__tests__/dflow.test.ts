@@ -171,7 +171,7 @@ describe("DflowAdapter", () => {
     it("returns normalized markets from API", async () => {
       (globalThis as Record<string, unknown>).fetch = jest
         .fn()
-        .mockResolvedValue(mockFetchResponse({ markets: [mockMarket], cursor: 2 }));
+        .mockResolvedValue(mockFetchResponse({ markets: [mockMarket], cursor: 0 }));
       const result = await adapter.listMarkets();
       expect(result).toHaveLength(1);
       expect(result[0].venue).toBe("kalshi");
@@ -185,7 +185,7 @@ describe("DflowAdapter", () => {
       };
       (globalThis as Record<string, unknown>).fetch = jest
         .fn()
-        .mockResolvedValue(mockFetchResponse({ markets: [finalizedMarket], cursor: 2 }));
+        .mockResolvedValue(mockFetchResponse({ markets: [finalizedMarket], cursor: 0 }));
       const result = await adapter.listMarkets();
       expect(result).toHaveLength(0);
     });
@@ -221,7 +221,7 @@ describe("DflowAdapter", () => {
       };
       (globalThis as Record<string, unknown>).fetch = jest
         .fn()
-        .mockResolvedValue(mockFetchResponse({ markets: [uninit], cursor: 2 }));
+        .mockResolvedValue(mockFetchResponse({ markets: [uninit], cursor: 0 }));
       const result = await adapter.listMarkets();
       expect(result).toHaveLength(0);
     });
@@ -231,7 +231,7 @@ describe("DflowAdapter", () => {
     it("returns a single market by ticker", async () => {
       (globalThis as Record<string, unknown>).fetch = jest
         .fn()
-        .mockResolvedValue(mockFetchResponse({ markets: [mockMarket], cursor: 2 }));
+        .mockResolvedValue(mockFetchResponse({ markets: [mockMarket], cursor: 0 }));
       const result = await adapter.getMarketDetail("KXSB-26-NE");
       expect(result.id).toBe("KXSB-26-NE");
     });
@@ -239,7 +239,7 @@ describe("DflowAdapter", () => {
     it("throws when ticker not found", async () => {
       (globalThis as Record<string, unknown>).fetch = jest
         .fn()
-        .mockResolvedValue(mockFetchResponse({ markets: [], cursor: 2 }));
+        .mockResolvedValue(mockFetchResponse({ markets: [], cursor: 0 }));
       await expect(adapter.getMarketDetail("NONEXISTENT")).rejects.toThrow(
         "Market NONEXISTENT not found",
       );

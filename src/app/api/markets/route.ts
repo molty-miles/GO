@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCachedMarkets } from "@/lib/aggregation/cache";
+import { getCachedMarketsWithTTL } from "@/lib/aggregation/cache";
 import { filterMarkets, sortMarkets, type DiscoveryQuery } from "@/lib/aggregation/discovery";
 import { refreshAllVenues } from "@/lib/aggregation/service";
 import { rateLimit } from "@/lib/aggregation/middleware";
@@ -25,9 +25,17 @@ export async function GET(request: NextRequest) {
     sort: (searchParams.get("sort") as DiscoveryQuery["sort"]) ?? undefined,
   };
 
-  let all = getCachedMarkets("all");
-  if (!all || all.length === 0) {
-    all = await refreshAllVenues();
+  let all = getCachedMarketsWithTTL("all");
+  if (!all) {
+    try {
+      all = await refreshAllVenues();
+    } catch (err) {
+      console.error("refreshAllVenues failed:", err);
+      return NextResponse.json(
+        { error: "Failed to fetch market data from upstream venues" },
+        { status: 502, headers: { "X-RateLimit-Remaining": String(remaining) } },
+      );
+    }
   }
 
   const filtered = filterMarkets(all, query);

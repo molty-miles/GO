@@ -104,8 +104,8 @@ export class PolymarketAdapter implements VenueDataAdapter {
       }
     };
 
-    ws.onerror = () => {
-      /* connection error handled by caller */
+    ws.onerror = (event) => {
+      console.error("[polymarket] WebSocket error:", event);
     };
 
     return () => {

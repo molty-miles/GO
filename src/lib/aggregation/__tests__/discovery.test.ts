@@ -31,6 +31,7 @@ const m1 = baseMarket({
   question: "Who will win the election?",
   c_yes: 0.6,
   volume: 50000,
+  liquidity: 1000,
   resolution_date: "2026-06-15T00:00:00Z",
 });
 const m2 = baseMarket({
@@ -47,6 +48,7 @@ const m3 = baseMarket({
   question: "Will GDP grow?",
   c_yes: 0.7,
   volume: 10000,
+  liquidity: 300,
   resolution_date: "2026-05-01T00:00:00Z",
 });
 const m4 = baseMarket({
@@ -55,6 +57,7 @@ const m4 = baseMarket({
   question: "Bitcoin above 100k?",
   c_yes: 0.45,
   volume: 80000,
+  liquidity: 500,
   resolution_date: "2026-07-01T00:00:00Z",
 });
 
@@ -122,7 +125,7 @@ describe("sortMarkets", () => {
 
   it("sorts by liquidity descending", () => {
     const result = sortMarkets([m3, m4, m1], "liquidity");
-    expect(result[0].id).toBe("4");
+    expect(result[0].id).toBe("1");
     expect(result[2].id).toBe("3");
   });
 });

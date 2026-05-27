@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import type { UnifiedMarket } from "@/types/market";
 import { cn } from "@/lib/utils";
@@ -39,31 +38,8 @@ function venueUrl(venue: string, slug: string): string {
 }
 
 export function MarketCard({ market, onAddLeg, isInParlay, parlayOutcome }: MarketCardProps) {
-  const [livePrice, setLivePrice] = useState<number>(market.c_yes);
-
-  useEffect(() => {
-    let cancelled = false;
-    const poll = async () => {
-      try {
-        const res = await fetch(`/api/markets/${market.id}`);
-        if (res.ok) {
-          const data = await res.json();
-          if (!cancelled && data.c_yes) setLivePrice(data.c_yes);
-        }
-      } catch {
-        // silent
-      }
-    };
-    const interval = setInterval(poll, 15000);
-    return () => {
-      cancelled = true;
-      clearInterval(interval);
-    };
-  }, [market.id]);
-
-  const yesPrice = livePrice;
-  const noPrice = 1 - livePrice;
-  const priceChanged = livePrice !== market.c_yes;
+  const yesPrice = market.c_yes;
+  const noPrice = 1 - market.c_yes;
 
   const handleAddYes = () => {
     onAddLeg?.(market, "Yes");
@@ -189,15 +165,9 @@ export function MarketCard({ market, onAddLeg, isInParlay, parlayOutcome }: Mark
         {/* Price Display */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span
-              className={cn(
-                "text-lg font-bold text-foreground transition-colors",
-                priceChanged && "text-green-400",
-              )}
-            >
+            <span className="text-lg font-bold text-foreground">
               {(yesPrice * 100).toFixed(0)}%
             </span>
-            {priceChanged && <span className="h-2 w-2 animate-pulse rounded-full bg-green-500" />}
             <span className="text-xs text-muted-foreground">Yes</span>
           </div>
           <div className="text-right">

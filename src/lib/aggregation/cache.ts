@@ -7,22 +7,13 @@ interface CacheEntry {
 
 const store = new Map<string, CacheEntry>();
 
-const METADATA_TTL = 60_000;
+const DEFAULT_TTL = 60_000;
 
 export function setCachedMarkets(key: string, markets: UnifiedMarket[]): void {
   store.set(key, { markets, timestamp: Date.now() });
 }
 
-export function getCachedMarkets(key: string): UnifiedMarket[] | null {
-  const entry = store.get(key);
-  if (!entry) return null;
-  return entry.markets;
-}
-
-export function getCachedMarketsWithTTL(
-  key: string,
-  ttl: number = METADATA_TTL,
-): UnifiedMarket[] | null {
+export function getCachedMarkets(key: string, ttl: number = DEFAULT_TTL): UnifiedMarket[] | null {
   const entry = store.get(key);
   if (!entry) return null;
   if (Date.now() - entry.timestamp > ttl) {
@@ -30,6 +21,13 @@ export function getCachedMarketsWithTTL(
     return null;
   }
   return entry.markets;
+}
+
+export function getCachedMarketsWithTTL(
+  key: string,
+  ttl: number = DEFAULT_TTL,
+): UnifiedMarket[] | null {
+  return getCachedMarkets(key, ttl);
 }
 
 export function getAllCached(): UnifiedMarket[] {

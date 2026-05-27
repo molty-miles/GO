@@ -112,16 +112,32 @@ export class DflowAdapter implements VenueDataAdapter {
   venueId = "kalshi" as const;
   requiresRelayer = true;
 
-  async listMarkets(): Promise<UnifiedMarket[]> {
-    const url = `${METADATA_BASE}/api/v1/markets?isInitialized=true&limit=200`;
-    const response = await fetchWithTimeout(url, { headers: buildHeaders() });
-    if (!response.ok) {
-      throw new Error(`DFlow Metadata API error: ${response.status}`);
+  constructor() {
+    if (!process.env.DFLOW_API_KEY) {
+      console.info("[dflow] Using public Metadata API (no DFLOW_API_KEY set)");
     }
-    const raw: unknown = await response.json();
-    const parsed = DflowMarketsResponseSchema.parse(raw);
+  }
+
+  async listMarkets(): Promise<UnifiedMarket[]> {
+    const allMarkets: DflowMarket[] = [];
+    let cursor = 0;
+    const MAX_PAGES = 10;
+
+    for (let page = 0; page < MAX_PAGES; page++) {
+      const url = `${METADATA_BASE}/api/v1/markets?isInitialized=true&limit=200&cursor=${cursor}`;
+      const response = await fetchWithTimeout(url, { headers: buildHeaders() });
+      if (!response.ok) {
+        throw new Error(`DFlow Metadata API error: ${response.status}`);
+      }
+      const raw: unknown = await response.json();
+      const parsed = DflowMarketsResponseSchema.parse(raw);
+      allMarkets.push(...parsed.markets);
+      if (parsed.cursor === 0 || parsed.cursor === cursor) break;
+      cursor = parsed.cursor;
+    }
+
     const result: UnifiedMarket[] = [];
-    for (const market of parsed.markets) {
+    for (const market of allMarkets) {
       if (market.status !== "active" && market.status !== "open") continue;
       const normalized = normalizeDflow(market);
       if (normalized) result.push(normalized);
@@ -130,18 +146,28 @@ export class DflowAdapter implements VenueDataAdapter {
   }
 
   async getMarketDetail(ticker: string): Promise<UnifiedMarket> {
-    const url = `${METADATA_BASE}/api/v1/markets?limit=1`;
-    const response = await fetchWithTimeout(url, { headers: buildHeaders() });
-    if (!response.ok) {
-      throw new Error(`DFlow Metadata API error: ${response.status}`);
+    let cursor = 0;
+    const MAX_PAGES = 10;
+
+    for (let page = 0; page < MAX_PAGES; page++) {
+      const url = `${METADATA_BASE}/api/v1/markets?isInitialized=true&limit=500&cursor=${cursor}`;
+      const response = await fetchWithTimeout(url, { headers: buildHeaders() });
+      if (!response.ok) {
+        throw new Error(`DFlow Metadata API error: ${response.status}`);
+      }
+      const raw: unknown = await response.json();
+      const parsed = DflowMarketsResponseSchema.parse(raw);
+      const found = parsed.markets.find((m) => m.ticker === ticker);
+      if (found) {
+        const normalized = normalizeDflow(found);
+        if (!normalized) throw new Error(`Market ${ticker} has no initialized tokens`);
+        return normalized;
+      }
+      if (parsed.cursor === 0 || parsed.cursor === cursor) break;
+      cursor = parsed.cursor;
     }
-    const raw: unknown = await response.json();
-    const parsed = DflowMarketsResponseSchema.parse(raw);
-    const found = parsed.markets.find((m) => m.ticker === ticker);
-    if (!found) throw new Error(`Market ${ticker} not found`);
-    const normalized = normalizeDflow(found);
-    if (!normalized) throw new Error(`Market ${ticker} has no initialized tokens`);
-    return normalized;
+
+    throw new Error(`Market ${ticker} not found`);
   }
 
   subscribePrices(_ids: string[], callback: (prices: Record<string, number>) => void): () => void {
@@ -158,8 +184,8 @@ export class DflowAdapter implements VenueDataAdapter {
           if (price != null) prices[market.ticker] = price;
         }
         callback(prices);
-      } catch {
-        /* swallow polling errors */
+      } catch (err) {
+        console.error("[dflow] Price polling error:", err);
       }
     }, 15_000);
 
