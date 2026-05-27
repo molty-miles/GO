@@ -32,7 +32,7 @@ export default function DocLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex flex-col md:flex-row min-h-screen">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div
@@ -120,7 +120,7 @@ export default function DocLayout({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Main content */}
-      <div className="min-h-screen flex-1 overflow-x-hidden pt-14 md:pt-0">{children}</div>
+      <div className="min-h-screen flex-1 min-w-0 overflow-x-hidden pt-14 md:pt-0">{children}</div>
     </div>
   );
 }
