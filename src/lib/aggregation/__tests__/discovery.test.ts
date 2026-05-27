@@ -120,9 +120,10 @@ describe("sortMarkets", () => {
     expect(result[0].id).toBe("3");
   });
 
-  it("sorts by c_yes (odds) descending", () => {
-    const result = sortMarkets([m1, m3], "odds");
-    expect(result[0].id).toBe("3");
+  it("sorts by liquidity descending", () => {
+    const result = sortMarkets([m3, m4, m1], "liquidity");
+    expect(result[0].id).toBe("4");
+    expect(result[2].id).toBe("3");
   });
 });
 

@@ -5,7 +5,7 @@ export interface DiscoveryQuery {
   venue?: string;
   category?: string;
   minVolume?: number;
-  sort?: "volume" | "resolve" | "odds" | "trending";
+  sort?: "volume" | "liquidity" | "resolve" | "trending";
 }
 
 function normalizeQuestion(q: string): string {
@@ -82,13 +82,13 @@ export function sortMarkets(
     case "volume":
       sorted.sort((a, b) => b.volume - a.volume);
       break;
+    case "liquidity":
+      sorted.sort((a, b) => b.liquidity - a.liquidity);
+      break;
     case "resolve":
       sorted.sort(
         (a, b) => new Date(a.resolution_date).getTime() - new Date(b.resolution_date).getTime(),
       );
-      break;
-    case "odds":
-      sorted.sort((a, b) => b.c_yes - a.c_yes);
       break;
     case "trending":
       sorted.sort((a, b) => b.volume - a.volume || b.liquidity - a.liquidity);

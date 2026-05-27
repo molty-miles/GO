@@ -1,8 +1,9 @@
 import { PolymarketAdapter } from "@/lib/adaptors/polymarket";
+import { DflowAdapter } from "@/lib/adaptors/dflow";
 import { setCachedMarkets } from "@/lib/aggregation/cache";
 import type { UnifiedMarket } from "@/types/market";
 
-const adapters = [new PolymarketAdapter()];
+const adapters = [new PolymarketAdapter(), new DflowAdapter()];
 
 let pollingInterval: ReturnType<typeof setInterval> | null = null;
 

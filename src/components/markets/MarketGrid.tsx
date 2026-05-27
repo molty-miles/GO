@@ -10,39 +10,19 @@ interface MarketGridProps {
   legs?: AccaLegInput[];
 }
 
-function flagBestOdds(markets: UnifiedMarket[]): UnifiedMarket[] {
-  // Mark the best odds market per venue
-  const byVenue: Record<string, UnifiedMarket[]> = {};
-  markets.forEach((m) => {
-    if (!byVenue[m.venue]) byVenue[m.venue] = [];
-    byVenue[m.venue].push(m);
-  });
-
-  const bestIds = new Set<string>();
-  Object.values(byVenue).forEach((group) => {
-    if (group.length === 0) return;
-    const best = [...group].sort((a, b) => b.c_yes - a.c_yes)[0];
-    if (best) bestIds.add(best.id);
-  });
-
-  return markets.map((m) => ({ ...m, isBestOdds: bestIds.has(m.id) }));
-}
-
 export function MarketGrid({ markets, isLoading, onAddLeg, legs = [] }: MarketGridProps) {
   const [filter, setFilter] = useState("");
 
-  const flagged = useMemo(() => flagBestOdds(markets), [markets]);
-
   const filtered = useMemo(() => {
     const q = filter.trim().toLowerCase();
-    if (!q) return flagged;
-    return flagged.filter(
+    if (!q) return markets;
+    return markets.filter(
       (m) =>
         m.question.toLowerCase().includes(q) ||
         m.venue.toLowerCase().includes(q) ||
         m.category.some((c) => c.toLowerCase().includes(q)),
     );
-  }, [flagged, filter]);
+  }, [markets, filter]);
 
   const isInParlay = (marketId: string) => legs.find((leg) => leg.marketId === marketId);
 
@@ -136,7 +116,6 @@ export function MarketGrid({ markets, isLoading, onAddLeg, legs = [] }: MarketGr
               onAddLeg={onAddLeg}
               isInParlay={!!leg}
               parlayOutcome={getParlayOutcome(market.id)}
-              isBestOdds={market.isBestOdds}
             />
           );
         })}

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { MoreMenu } from "@/components/layout/MoreMenu";
 
 const navItems = [
   {
@@ -74,7 +75,10 @@ export function NavBar() {
       <nav className="hidden w-56 shrink-0 border-r border-border bg-background p-4 md:flex md:flex-col md:gap-1">
         <div className="mb-6 flex items-center justify-between px-3">
           <div className="text-lg font-semibold tracking-tight">GO Market</div>
-          <ThemeToggle />
+          <div className="flex items-center gap-2">
+            <MoreMenu />
+            <ThemeToggle />
+          </div>
         </div>
         {navItems.map((item) => (
           <Link
@@ -96,7 +100,10 @@ export function NavBar() {
       {/* Mobile top bar */}
       <div className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur md:hidden">
         <div className="text-base font-semibold tracking-tight">GO Market</div>
-        <ThemeToggle />
+        <div className="flex items-center gap-2">
+          <MoreMenu />
+          <ThemeToggle />
+        </div>
       </div>
 
       {/* Mobile floating bottom nav */}

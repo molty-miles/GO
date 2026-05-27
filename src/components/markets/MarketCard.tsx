@@ -10,7 +10,6 @@ interface MarketCardProps {
   onAddLeg?: (market: UnifiedMarket, outcome: "Yes" | "No") => void;
   isInParlay?: boolean;
   parlayOutcome?: "Yes" | "No" | null;
-  isBestOdds?: boolean;
 }
 
 function venueColor(venue: string): string {
@@ -39,13 +38,7 @@ function venueUrl(venue: string, slug: string): string {
   }
 }
 
-export function MarketCard({
-  market,
-  onAddLeg,
-  isInParlay,
-  parlayOutcome,
-  isBestOdds,
-}: MarketCardProps) {
+export function MarketCard({ market, onAddLeg, isInParlay, parlayOutcome }: MarketCardProps) {
   const [livePrice, setLivePrice] = useState<number>(market.c_yes);
 
   useEffect(() => {
@@ -85,17 +78,10 @@ export function MarketCard({
       className={cn(
         "group relative flex flex-col rounded-xl border bg-card p-3 sm:p-4 transition-all duration-200 w-full min-w-0",
         "hover:border-zinc-600 hover:shadow-lg hover:shadow-black/20",
-        isBestOdds ? "border-emerald-500/40" : "border-border",
+        "border-border",
         isInParlay && "border-primary/40 ring-1 ring-primary/20",
       )}
     >
-      {/* Best Odds Badge */}
-      {isBestOdds && (
-        <span className="absolute right-2 top-2 z-10 rounded-md bg-emerald-600/20 px-2 py-0.5 text-[10px] font-medium text-emerald-400 leading-tight">
-          Best Odds
-        </span>
-      )}
-
       {/* Parlay Added Indicator */}
       {isInParlay && parlayOutcome && (
         <div className="absolute left-2 top-2 z-10 flex items-center gap-1 rounded-md bg-primary/20 px-2 py-0.5 text-[10px] font-medium text-primary">
