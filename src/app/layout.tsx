@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GO Market – Cross-Platform Prediction Market Accumulator",
+  title: "GO – Cross-Platform Prediction Market Accumulator",
   description:
     "Combine prediction market bets from Polymarket, Kalshi, and Limitless into a single accumulator ticket.",
 };

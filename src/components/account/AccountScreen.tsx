@@ -3,22 +3,22 @@
 import { useState, useEffect } from "react";
 import { useUser } from "@/hooks/useUser";
 import { useBalance } from "@/hooks/useBalance";
-import { useDeposit } from "@/hooks/useDeposit";
 import { useWithdrawal } from "@/hooks/useWithdrawal";
 import { formatUsdc } from "@/utils/format";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { cn } from "@/lib/utils";
+import { Copy, Check } from "lucide-react";
 import { fetchUserHistory, type HistoryItem } from "@/lib/contract/history";
 
 export function AccountScreen() {
   const { authenticated, address, login, exportWallet } = useUser();
   const { available, deployedCapital, pendingWinnings, refetch: refetchBalance } = useBalance();
-  const { state: depositState, error: depositError, deposit } = useDeposit();
   const { state: withdrawState, error: withdrawError, withdraw } = useWithdrawal();
   const [tab, setTab] = useState<"history" | "deposit" | "withdraw">("history");
   const [amount, setAmount] = useState("");
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [historyLoading, setHistoryLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (!address || tab !== "history") return;
@@ -150,39 +150,30 @@ export function AccountScreen() {
 
       {tab === "deposit" && (
         <div className="rounded-xl border bg-card p-4">
-          <label className="mb-2 block text-sm text-muted-foreground">Amount (USDC)</label>
-          <input
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            placeholder="0.00"
-            className="mb-3 w-full rounded-xl border bg-background px-4 py-3 text-lg outline-none placeholder:text-muted-foreground focus:border-ring"
-          />
-          {depositError && <p className="mb-2 text-sm text-destructive">{depositError}</p>}
-          <button
-            onClick={async () => {
-              await deposit(Number(amount));
-              setAmount("");
-              refetchBalance();
-            }}
-            disabled={
-              !amount ||
-              Number(amount) <= 0 ||
-              depositState === "pending" ||
-              depositState === "confirming"
-            }
-            className="w-full rounded-xl bg-primary py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
-          >
-            {depositState === "pending"
-              ? "Approving..."
-              : depositState === "confirming"
-                ? "Depositing..."
-                : depositState === "confirmed"
-                  ? "Done ✓"
-                  : depositState === "failed"
-                    ? "Retry"
-                    : "Deposit"}
-          </button>
+          <p className="mb-1 text-sm text-muted-foreground">
+            Send USDC to your wallet address below:
+          </p>
+          <div className="flex items-center gap-2 rounded-xl border bg-background px-4 py-3">
+            <code className="flex-1 truncate text-sm font-mono">{address}</code>
+            <button
+              onClick={async () => {
+                await navigator.clipboard.writeText(address ?? "");
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+              }}
+              className="shrink-0 rounded-lg p-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+              aria-label="Copy wallet address"
+            >
+              {copied ? (
+                <Check className="h-4 w-4 text-emerald-500" />
+              ) : (
+                <Copy className="h-4 w-4" />
+              )}
+            </button>
+          </div>
+          <p className="mt-2 text-xs text-muted-foreground">
+            Only send USDC on Base Sepolia. Deposits are credited after on-chain confirmation.
+          </p>
         </div>
       )}
 

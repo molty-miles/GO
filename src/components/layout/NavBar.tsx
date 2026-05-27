@@ -74,7 +74,7 @@ export function NavBar() {
       {/* Desktop sidebar */}
       <nav className="hidden w-56 shrink-0 border-r border-border bg-background md:flex md:flex-col">
         <div className="flex items-center justify-between border-b border-border px-4 py-4">
-          <div className="text-lg font-semibold tracking-tight">GO Market</div>
+          <div className="text-lg font-semibold tracking-tight">GO</div>
           <div className="flex flex-col items-center gap-2">
             <MoreMenu />
             <ThemeToggle />
@@ -101,7 +101,7 @@ export function NavBar() {
 
       {/* Mobile top bar */}
       <div className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur md:hidden">
-        <div className="text-base font-semibold tracking-tight">GO Market</div>
+        <div className="text-base font-semibold tracking-tight">GO</div>
         <div className="flex items-center gap-2">
           <ThemeToggle />
           <MoreMenu />
