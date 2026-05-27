@@ -8,8 +8,8 @@ export default function DocPage() {
   const content = fs.readFileSync(filePath, "utf-8");
 
   return (
-    <div className="min-h-screen p-6 md:p-10">
-      <div className="prose prose-sm md:prose-base dark:prose-invert max-w-4xl mx-auto">
+    <div className="min-h-screen w-full">
+      <div className="doc-content prose prose-sm md:prose-base prose-zinc dark:prose-invert max-w-4xl mx-auto px-4 py-6 md:py-10 break-words">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
       </div>
     </div>

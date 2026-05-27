@@ -25,16 +25,14 @@ export function MoreMenu() {
 
         {open && (
           <div className="absolute right-0 mt-2 w-48 rounded-xl border border-border bg-background shadow-lg z-50 py-1">
-            <a
+            <Link
               href="/doc"
-              target="_blank"
-              rel="noopener noreferrer"
               className="flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-accent hover:text-accent-foreground"
               onClick={closeMenu}
             >
               <ExternalLink className="h-4 w-4" />
               Docs
-            </a>
+            </Link>
 
             <Link
               href="/leaderboard"

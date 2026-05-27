@@ -5,8 +5,7 @@ import { ThemeProvider } from "next-themes";
 import { PrivyProvider } from "@/lib/providers/PrivyProvider";
 import { AccaBuilderProvider } from "@/lib/providers/AccaBuilderProvider";
 import { ToastProvider } from "@/components/ui/Toast";
-import { NavBar } from "@/components/layout/NavBar";
-import { AccaFab } from "@/components/acca/AccaFab";
+import { AppShell } from "@/components/layout/AppShell";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,11 +46,7 @@ export default function RootLayout({
           <PrivyProvider>
             <AccaBuilderProvider>
               <ToastProvider>
-                <div className="flex">
-                  <NavBar />
-                  <main className="min-h-screen flex-1 md:ml-0">{children}</main>
-                </div>
-                <AccaFab />
+                <AppShell>{children}</AppShell>
               </ToastProvider>
             </AccaBuilderProvider>
           </PrivyProvider>

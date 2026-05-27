@@ -127,6 +127,53 @@ body {
   }
 }
 
+/* Prose light mode legibility improvements */
+.prose {
+  --tw-prose-body: hsl(240 10% 3.9%);
+  --tw-prose-headings: hsl(240 10% 3.9%);
+  --tw-prose-links: hsl(243 75% 59%);
+  --tw-prose-bold: hsl(240 10% 3.9%);
+  --tw-prose-code: hsl(240 10% 3.9%);
+  --tw-prose-quotes: hsl(240 5% 26%);
+  --tw-prose-quote-borders: hsl(243 75% 59%);
+  --tw-prose-hr: hsl(240 5.9% 90%);
+  --tw-prose-th-borders: hsl(240 5.9% 80%);
+  --tw-prose-td-borders: hsl(240 5.9% 90%);
+}
+
+.dark .prose {
+  --tw-prose-body: hsl(0 0% 88%);
+  --tw-prose-headings: hsl(0 0% 98%);
+  --tw-prose-links: hsl(243 75% 70%);
+  --tw-prose-bold: hsl(0 0% 98%);
+  --tw-prose-code: hsl(0 0% 98%);
+  --tw-prose-quotes: hsl(0 0% 75%);
+  --tw-prose-quote-borders: hsl(243 75% 59%);
+  --tw-prose-hr: hsl(240 3.7% 25%);
+  --tw-prose-th-borders: hsl(240 3.7% 35%);
+  --tw-prose-td-borders: hsl(240 3.7% 25%);
+}
+
+/* Doc content mobile overflow fix */
+.doc-content pre,
+.doc-content code,
+.doc-content table {
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.doc-content table {
+  display: block;
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .doc-content pre {
+    max-width: calc(100vw - 2rem);
+  }
+}
+
 /* Prevent long words from breaking layout on small screens */
 img,
 video,
