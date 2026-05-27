@@ -75,7 +75,10 @@ export function NavBar() {
       <nav className="hidden w-56 shrink-0 border-r border-border bg-background md:flex md:flex-col">
         <div className="flex items-center justify-between border-b border-border px-4 py-4">
           <div className="text-lg font-semibold tracking-tight">GO Market</div>
-          <ThemeToggle />
+          <div className="flex flex-col items-center gap-2">
+            <MoreMenu />
+            <ThemeToggle />
+          </div>
         </div>
         <div className="flex-1 space-y-0.5 p-3">
           {navItems.map((item) => (
@@ -94,17 +97,14 @@ export function NavBar() {
             </Link>
           ))}
         </div>
-        <div className="border-t border-border p-2 flex items-center justify-center">
-          <MoreMenu />
-        </div>
       </nav>
 
       {/* Mobile top bar */}
       <div className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur md:hidden">
         <div className="text-base font-semibold tracking-tight">GO Market</div>
         <div className="flex items-center gap-2">
-          <MoreMenu />
           <ThemeToggle />
+          <MoreMenu />
         </div>
       </div>
 
@@ -129,3 +129,21 @@ export function NavBar() {
     </>
   );
 }
+/home/engine/.bashrc: line 1: syntax error near unexpected token `('
+/home/engine/.bashrc: line 1: `. /etc/profile.d/workload-containment.shn# ~/.bashrc: executed by bash(1) for non-login shells.'
+/home/engine/.bashrc: line 1: syntax error near unexpected token `('
+/home/engine/.bashrc: line 1: `. /etc/profile.d/workload-containment.shn# ~/.bashrc: executed by bash(1) for non-login shells.'
+/home/engine/.bashrc: line 1: syntax error near unexpected token `('
+/home/engine/.bashrc: line 1: `. /etc/profile.d/workload-containment.shn# ~/.bashrc: executed by bash(1) for non-login shells.'
+/home/engine/.bashrc: line 1: syntax error near unexpected token `('
+/home/engine/.bashrc: line 1: `. /etc/profile.d/workload-containment.shn# ~/.bashrc: executed by bash(1) for non-login shells.'
+/home/engine/.bashrc: line 1: syntax error near unexpected token `('
+/home/engine/.bashrc: line 1: `. /etc/profile.d/workload-containment.shn# ~/.bashrc: executed by bash(1) for non-login shells.'
+/home/engine/.bashrc: line 1: syntax error near unexpected token `('
+/home/engine/.bashrc: line 1: `. /etc/profile.d/workload-containment.shn# ~/.bashrc: executed by bash(1) for non-login shells.'
+/home/engine/.bashrc: line 1: syntax error near unexpected token `('
+/home/engine/.bashrc: line 1: `. /etc/profile.d/workload-containment.shn# ~/.bashrc: executed by bash(1) for non-login shells.'
+/home/engine/.bashrc: line 1: syntax error near unexpected token `('
+/home/engine/.bashrc: line 1: `. /etc/profile.d/workload-containment.shn# ~/.bashrc: executed by bash(1) for non-login shells.'
+/home/engine/.bashrc: line 1: syntax error near unexpected token `('
+/home/engine/.bashrc: line 1: `. /etc/profile.d/workload-containment.shn# ~/.bashrc: executed by bash(1) for non-login shells.'
