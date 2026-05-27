@@ -159,8 +159,15 @@ body {
 .doc-content code,
 .doc-content table {
   overflow-x: auto;
-  white-space: pre-wrap;
   word-break: break-word;
+}
+
+.doc-content pre {
+  white-space: pre;
+}
+
+.doc-content code {
+  white-space: pre-wrap;
 }
 
 .doc-content table {
@@ -170,11 +177,17 @@ body {
 
 @media (max-width: 640px) {
   .doc-content pre {
-    max-width: calc(100vw - 2rem);
+    max-width: calc(100% - 2rem);
   }
 }
 
 /* Prevent long words from breaking layout on small screens */
+*,
+*::before,
+*::after {
+  overflow-wrap: break-word;
+}
+
 img,
 video,
 svg {
@@ -196,3 +209,9 @@ a {
   color: inherit;
   text-decoration: none;
 }
+/home/engine/.bashrc: line 1: syntax error near unexpected token `('
+/home/engine/.bashrc: line 1: `. /etc/profile.d/workload-containment.shn# ~/.bashrc: executed by bash(1) for non-login shells.'
+/home/engine/.bashrc: line 1: syntax error near unexpected token `('
+/home/engine/.bashrc: line 1: `. /etc/profile.d/workload-containment.shn# ~/.bashrc: executed by bash(1) for non-login shells.'
+/home/engine/.bashrc: line 1: syntax error near unexpected token `('
+/home/engine/.bashrc: line 1: `. /etc/profile.d/workload-containment.shn# ~/.bashrc: executed by bash(1) for non-login shells.'

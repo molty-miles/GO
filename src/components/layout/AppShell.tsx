@@ -13,9 +13,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex">
+    <div className="flex flex-col md:flex-row">
       <NavBar />
-      <main className="min-h-screen flex-1 md:ml-0">{children}</main>
+      <main className="min-h-screen flex-1 min-w-0 md:ml-0">{children}</main>
       <AccaFab />
     </div>
   );
