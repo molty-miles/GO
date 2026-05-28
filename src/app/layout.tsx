@@ -21,6 +21,11 @@ export const metadata: Metadata = {
   title: "GO – Cross-Platform Prediction Market Accumulator",
   description:
     "Combine prediction market bets from Polymarket, Kalshi, and Limitless into a single accumulator ticket.",
+  manifest: "/manifest.json",
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export const viewport = {
